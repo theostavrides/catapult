@@ -18,10 +18,6 @@ class PhysicsSceneWithAmmo implements CreateSceneClass {
         const scene = new Scene(engine);
         scene.enablePhysics(null, new HavokPlugin(true, await havokModule));
         
-        // const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(20, 15, -60), scene);
-        // camera.setTarget(new BABYLON.Vector3(-30,250,0));
-        // camera.attachControl(canvas, true);
-
         const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(-60, 300, -60), scene);
         camera.setTarget(new BABYLON.Vector3(-30,0,0));
         camera.attachControl(canvas, true);
@@ -31,26 +27,10 @@ class PhysicsSceneWithAmmo implements CreateSceneClass {
         
         const initGround = () => {
             const ground = MeshBuilder.CreateGround("ground", {width: 1000, height: 1000}, scene);
-            const groundAggregate = new BABYLON.PhysicsAggregate(ground, BABYLON.PhysicsShapeType.BOX, { mass: 0 }, scene);
+            new BABYLON.PhysicsAggregate(ground, BABYLON.PhysicsShapeType.BOX, { mass: 0 }, scene);
         }
 
         const initBlocks = () => {
-            // for (let x = 0; x < 15; x++) { 
-            //     for (let y = 0; y < 6; y++) {
-            //         for (let z = 0; z < 2; z++) {
-            //             const x0 = x * 2 
-            //             const y0 = y * 1 + .5
-            //             const z0 = z * 1
-        
-            //             const block = BABYLON.MeshBuilder.CreateBox("box", {height: 1, width: 2, depth: 1}, scene);
-            //             block.position.x = x0
-            //             block.position.y = y0
-            //             block.position.z = z0
-            //             new BABYLON.PhysicsAggregate(block, BABYLON.PhysicsShapeType.BOX, { mass: 10, restitution:0.75}, scene);
-            //         }            
-            //     }   
-            // }
-
             for (let x = 0; x < 1; x++) { 
                 for (let y = 0; y < 2000; y++) {
                     for (let z = 0; z < 1; z++) {
