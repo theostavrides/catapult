@@ -1,7 +1,5 @@
-import Game from "./Game/Game"
+import Game from "./Game"
 
+new Game()
 
-const game = new Game()
-game.start()
-
-export default console.log
+export default null
