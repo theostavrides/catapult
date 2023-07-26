@@ -1,5 +1,5 @@
-import Game from "./Game"
+import { createGame } from "./Game"
 
-new Game()
+createGame()
 
 export default null

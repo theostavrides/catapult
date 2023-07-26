@@ -1,4 +1,4 @@
-import { Inspector } from '@babylonjs/inspector';
+// import { Inspector } from '@babylonjs/inspector';
 import { Scene } from "@babylonjs/core/scene";
 import * as BABYLON from "@babylonjs/core";
 import { MeshBuilder, Vector3 } from "@babylonjs/core";
@@ -8,7 +8,7 @@ import "@babylonjs/core/Physics/physicsEngineComponent";
 import "@babylonjs/core/Materials/standardMaterial";
 import { havokModule } from "../externals/havok";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
-import Game from "../Game";
+import { type Game } from "../Game";
 
 export interface Level {
     scene: Scene // The unique scene for the level
@@ -22,7 +22,7 @@ class TowerLevel implements Level {
     game: Game
 
     constructor({ game } : { game: Game } ){
-        this.scene = new Scene(game.engine!);
+        this.scene = new Scene(game.engine);
         this.game = game
     }
 

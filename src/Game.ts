@@ -8,15 +8,16 @@ import createStartMenuScene from "./menus/createMainMenu";
 import TowerLevel, { Level } from "./Levels/TowerLevel";
 
 export enum LevelEnum { TOWER = 1 }
-class Game {
+export class Game {
     canvas: HTMLCanvasElement
-    engine: Engine|null = null
+    engine: Engine
     level: Level|null = null
     mainMenuScene: Scene|null = null
     mainMenuOpen = true
 
-    constructor(){
-        this.canvas = document.getElementById('renderCanvas') as HTMLCanvasElement
+    constructor(canvas: HTMLCanvasElement, engine: Engine){
+        this.canvas = canvas
+        this.engine = engine
         
         this._init()
     }
@@ -27,6 +28,10 @@ class Game {
         this.mainMenuScene = createStartMenuScene(this.engine, (level: LevelEnum) => {
             this._handleLevelChange(level)
         })
+        
+        window.addEventListener('resize', () => {
+            this.engine.resize();
+        });
         
         this.engine.runRenderLoop(() => {
             if (this.level?.scene){
@@ -39,16 +44,27 @@ class Game {
         })
     }
 
-    private async _handleLevelChange(level: LevelEnum){
-        if (level === LevelEnum.TOWER) {
-            const towerLevel = new TowerLevel({ game: this })
-            await towerLevel.preload()
-            await towerLevel.create()   
-            this.level = towerLevel 
+    private async _handleLevelChange(level_id: LevelEnum){
+        let level: Level | undefined = undefined
+        
+        if (level_id === LevelEnum.TOWER) {
+            level = new TowerLevel({ game: this })
         }
 
+        if (level) {
+            await level.preload()
+            await level.create()   
+            this.level = level 
+        }
+        
         this.mainMenuOpen = false
     }
 }
 
-export default Game
+export const createGame = async() => {
+    const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement
+    const engine =  (await EngineFactory.CreateAsync(canvas, {})) as Engine
+    return new Game(canvas, engine)
+}
+
+export default createGame
