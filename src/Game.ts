@@ -5,7 +5,8 @@ import "@babylonjs/loaders/glTF";
 import { Scene } from "@babylonjs/core";
 import { Engine, EngineFactory } from "@babylonjs/core";
 import createStartMenuScene from "./menus/createMainMenu";
-import TowerLevel, { Level } from "./Levels/TowerLevel";
+import { type Level } from "./Levels/TowerLevel";
+import createTowerLevel from "./Levels/TowerLevel";
 
 export enum LevelEnum { TOWER = 1 }
 export class Game {
@@ -26,12 +27,13 @@ export class Game {
         this.engine = (await EngineFactory.CreateAsync(this.canvas, {})) as Engine
 
         this.mainMenuScene = createStartMenuScene(this.engine, (level: LevelEnum) => {
-            this._handleLevelChange(level)
+            this._goToLevel(level)
         })
         
         window.addEventListener('resize', () => {
             this.engine.resize();
         });
+
         
         this.engine.runRenderLoop(() => {
             if (this.level?.scene){
@@ -44,18 +46,11 @@ export class Game {
         })
     }
 
-    private async _handleLevelChange(level_id: LevelEnum){
-        let level: Level | undefined = undefined
-        
+    private async _goToLevel(level_id: LevelEnum){        
         if (level_id === LevelEnum.TOWER) {
-            level = new TowerLevel({ game: this })
+            this.level = await createTowerLevel({ game: this })
         }
 
-        if (level) {
-            await level.preload()
-            await level.create()   
-            this.level = level 
-        }
         
         this.mainMenuOpen = false
     }
