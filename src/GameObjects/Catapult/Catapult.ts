@@ -1,22 +1,25 @@
 import { Scene } from "@babylonjs/core/scene";
-import { SceneLoader, Node } from '@babylonjs/core'
+import { SceneLoader, AbstractMesh, Vector3 } from '@babylonjs/core'
 
 
 
 export class Catapult {
-    node: Node
+    mesh: AbstractMesh
 
-    constructor(catapultNode: Node){
-        this.node = catapultNode
+    constructor(scene: Scene, mesh: AbstractMesh){
+        this.mesh = mesh
+
+        this.mesh.rotate(new Vector3(0,1,0), Math.PI,)
+
     }
 }
 
 export const createCatapult = async (scene: Scene) => {
     const result = await SceneLoader.ImportMeshAsync(["Catapult"],'models/', 'catapult.glb', scene)
-    const catapultNode = result.meshes[0].getChildren()[0]
-    catapultNode.parent = null
-    result.meshes[0].dispose()
-    return new Catapult(catapultNode)
+    const catapultMesh = result.meshes[0]
+    // catapultNode.parent = null
+    // result.meshes[0].dispose()
+    return new Catapult(scene, catapultMesh)
 }
 
 export default createCatapult
