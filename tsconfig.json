@@ -9,7 +9,6 @@
         "strictNullChecks": true,
         "strictFunctionTypes": true,
 		"preserveConstEnums":true,
-        "strictPropertyInitialization": false,
         "sourceMap": true,
         "noResolve": false,
         "noImplicitAny": false,

@@ -10,11 +10,19 @@ import { havokModule } from "../externals/havok";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import Game from "../Game";
 
-class TowerLevel {
-    scene: Scene;
+export interface Level {
+    scene: Scene // The unique scene for the level
+    game: Game // Reference to the main game object
+    preload: () => void
+    create: () => void
+}
+
+class TowerLevel implements Level {
+    scene: Scene
     game: Game
 
     constructor({ game } : { game: Game } ){
+        this.scene = new Scene(game.engine!);
         this.game = game
     }
 
@@ -23,7 +31,6 @@ class TowerLevel {
     }
 
     async create() {
-        this.scene = new Scene(this.game.engine);
         // Inspector.Show(scene, {});
     
         this.scene.enablePhysics(null, new HavokPlugin(true, await havokModule));
