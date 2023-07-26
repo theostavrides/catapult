@@ -7,7 +7,7 @@ import "@babylonjs/core/Materials/standardMaterial";
 import Game from "../Game";
 
 const createStartMenuScene = (game: Game) => {
-    const scene = new Scene(game._engine);
+    const scene = new Scene(game.engine);
 
     // Mark the GUI scene auto clear as false so it doesn't erase the currently rendering scene
     scene.autoClear = false;
@@ -22,14 +22,14 @@ const createStartMenuScene = (game: Game) => {
             [Level.BARRACKS]: "Barracks"
         }
         const button = Button.CreateSimpleButton(buttonData[level], buttonData[level]);
-        
+
         button.width = "200px";
         button.height = "40px";
         button.color = "white";
         button.background = "green";
         advancedTexture.addControl(button);
         button.onPointerUpObservable.add(() => {
-            game._goToLevel(level)
+            // game._goToLevel(level)
         });
         return button
     }
