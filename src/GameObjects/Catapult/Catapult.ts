@@ -1,5 +1,5 @@
 import { Scene } from "@babylonjs/core/scene";
-import { SceneLoader, AbstractMesh, Vector3, MeshBuilder, Mesh, AxesViewer } from '@babylonjs/core'
+import { SceneLoader, AbstractMesh, Vector3, MeshBuilder, Mesh } from '@babylonjs/core'
 
 
 
