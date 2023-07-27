@@ -1,24 +1,30 @@
 import { Scene } from "@babylonjs/core/scene";
-import { SceneLoader, AbstractMesh, Vector3 } from '@babylonjs/core'
+import { SceneLoader, AbstractMesh, Vector3, MeshBuilder, Mesh, AxesViewer } from '@babylonjs/core'
 
 
 
 export class Catapult {
     mesh: AbstractMesh
+    cameraTarget: Mesh
 
     constructor(scene: Scene, mesh: AbstractMesh){
         this.mesh = mesh
-
-        this.mesh.rotate(new Vector3(0,1,0), Math.PI,)
-
+        
+        this.cameraTarget = MeshBuilder.CreateBox("cameraTarget", {size: .25 }, scene);
+        this.cameraTarget.position = new Vector3(0, 4.75, 0);
+        this.mesh.addChild(this.cameraTarget)   
+        this.cameraTarget.visibility = 0
     }
 }
 
 export const createCatapult = async (scene: Scene) => {
     const result = await SceneLoader.ImportMeshAsync(["Catapult"],'models/', 'catapult.glb', scene)
     const catapultMesh = result.meshes[0]
-    // catapultNode.parent = null
-    // result.meshes[0].dispose()
+    catapultMesh.scaling = new Vector3(-1,1,1)
+    catapultMesh.rotation = new Vector3(0,0,0)
+
+    catapultMesh.name = "catapultContainer"
+
     return new Catapult(scene, catapultMesh)
 }
 

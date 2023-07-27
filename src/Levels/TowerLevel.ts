@@ -3,9 +3,11 @@
 import "@babylonjs/loaders/glTF";
 import { Scene } from "@babylonjs/core/scene";
 import { 
-    MeshBuilder, Vector3, Color3, Color4, FreeCamera, PointLight, StandardMaterial,
-    PhysicsAggregate, PhysicsShapeType, HemisphericLight, SpotLight, DirectionalLight,
-    FollowCamera, 
+    MeshBuilder, Vector3, Color3, Color4, StandardMaterial,
+    PhysicsAggregate, PhysicsShapeType, HemisphericLight, DirectionalLight,
+    FollowCamera,
+    FreeCamera,
+    UniversalCamera, 
 } from "@babylonjs/core";
 import "@babylonjs/core/Physics/physicsEngineComponent";
 
@@ -44,14 +46,13 @@ class TowerLevel implements Level {
     }
 
     private _initCamera(){
-        const camera = new FollowCamera("FollowCam", new Vector3(0, 4, -7), this.scene, this.catapult.mesh);
-        camera.radius = 5;
-        camera.heightOffset = 1;
-        camera.rotationOffset = 0;        
-        camera.cameraAcceleration = 0.1
-        camera.maxCameraSpeed = 10
-        camera.rotation.x = 30
-
+        const camera = new FollowCamera("FollowCam", new Vector3(0, 4, 0), this.scene, this.catapult.cameraTarget)
+        camera.rotationOffset = 180
+        camera.heightOffset = 0
+        camera.radius = 13
+        // const camera = new UniversalCamera("freeCam", new Vector3(10,1,10), this.scene)
+        // camera.attachControl(this.game.canvas, true);
+        // camera.setTarget(Vector3.Zero());
     }
 
     private _initLights(){
@@ -61,7 +62,7 @@ class TowerLevel implements Level {
 
 
     private _initGround(){
-        const ground = MeshBuilder.CreateGround("ground", {width: 10, height: 10}, this.scene);
+        const ground = MeshBuilder.CreateGround("ground", {width: 1000, height: 1000}, this.scene);
         const material = new StandardMaterial("myMaterial", this.scene);
         ground.material = material
         material.diffuseColor = new Color3(.5, .6, .6);
