@@ -4,10 +4,9 @@ import "@babylonjs/loaders/glTF";
 import { Scene } from "@babylonjs/core/scene";
 import { 
     MeshBuilder, Vector3, Color3, Color4, StandardMaterial,
-    PhysicsAggregate, PhysicsShapeType, HemisphericLight, DirectionalLight,
+    PhysicsAggregate, PhysicsShapeType, 
+    HemisphericLight, DirectionalLight,
     FollowCamera,
-    FreeCamera,
-    UniversalCamera, 
 } from "@babylonjs/core";
 import "@babylonjs/core/Physics/physicsEngineComponent";
 
@@ -18,6 +17,7 @@ import { havokModule } from "../externals/havok";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { type Game } from "../Game";
 import { type Catapult, createCatapult } from "../GameObjects/Catapult/Catapult";
+import InputController from "../InputController";
 
 export interface Level {
     scene: Scene // The unique scene for the level
@@ -31,28 +31,34 @@ interface ITowerLevelParams {
     game: Game,
     scene: Scene,
     assets: ITowerLevelAssets
+    inputController: InputController
 }
 
 class TowerLevel implements Level {
     scene: Scene
     game: Game
     catapult: Catapult
+    private _input: InputController
 
-    constructor({ game, scene, assets } : ITowerLevelParams ){
+    constructor({ game, scene, assets, inputController } : ITowerLevelParams ){
         this.scene = scene
         this.game = game
         this.catapult = assets.catapult
-        this._init()
+        this._input = inputController
+
+        this._initCamera()
+        this._initLights()        
+        this._initGround()
+        this._initDebugger()
     }
 
     private _initCamera(){
         const camera = new FollowCamera("FollowCam", new Vector3(0, 4, 0), this.scene, this.catapult.cameraTarget)
+        // camera.maxCameraSpeed = 100; 
+        // camera.cameraAcceleration = 1;
         camera.rotationOffset = 180
         camera.heightOffset = 0
         camera.radius = 13
-        // const camera = new UniversalCamera("freeCam", new Vector3(10,1,10), this.scene)
-        // camera.attachControl(this.game.canvas, true);
-        // camera.setTarget(Vector3.Zero());
     }
 
     private _initLights(){
@@ -62,17 +68,14 @@ class TowerLevel implements Level {
 
 
     private _initGround(){
-        const ground = MeshBuilder.CreateGround("ground", {width: 1000, height: 1000}, this.scene);
+        const ground = MeshBuilder.CreateGround("ground", {width: 20, height: 20}, this.scene);
         const material = new StandardMaterial("myMaterial", this.scene);
         ground.material = material
         material.diffuseColor = new Color3(.5, .6, .6);
         new PhysicsAggregate(ground, PhysicsShapeType.BOX, { mass: 0 }, this.scene);
     }
-    
-    private async _init() {    
-        this.scene.enablePhysics(null, new HavokPlugin(true, await havokModule));
-        this.scene.clearColor = new Color4(0, 0, 0, 1);
 
+    private _initDebugger(){
         window.addEventListener("keydown", (ev) => {
             if (ev.shiftKey && ev.ctrlKey && ev.key === 'I') {
                 if (this.scene.debugLayer.isVisible()) {
@@ -82,18 +85,18 @@ class TowerLevel implements Level {
                 }
             }
         })
-
-        this._initCamera()
-        this._initLights()        
-        this._initGround()
     }
 }
 
 const createTowerLevel = async ({ game } : { game: Game }) => {
     const scene = new Scene(game.engine)
+    scene.enablePhysics(null, new HavokPlugin(true, await havokModule));
+    scene.clearColor = new Color4(0, 0, 0, 1);
+
+    const inputController = new InputController(scene)
     
     const getTowerLevelAssets = async (scene: Scene) : Promise<ITowerLevelAssets> => {
-        const tasks = [createCatapult(scene)]
+        const tasks = [createCatapult(scene, inputController)]
         
         const [catapult] = await Promise.all(tasks)
             
@@ -111,28 +114,12 @@ const createTowerLevel = async ({ game } : { game: Game }) => {
         loadTowerLevelModules
     ])
 
-    return new TowerLevel({ game, scene, assets })
+    return new TowerLevel({ 
+        game, 
+        scene, 
+        assets,
+        inputController,
+    })
 }
 
 export default createTowerLevel
-
-
-        // Inspector.Show(scene, {});
-// const initBlock = () => {
-//     const block = MeshBuilder.CreateBox("box", {
-//         height: 1, 
-//         width: 1, 
-//         depth: 1,
-//     }, this.scene);
-    
-//     const material = new StandardMaterial("myMaterial", this.scene);
-//     block.material = material
-//     material.diffuseColor = new Color3(.6, .515, .96);
-
-//     block.position.x = 0
-//     block.position.y = .5
-//     block.position.z = 0
-
-//     new PhysicsAggregate(block, PhysicsShapeType.BOX, { mass: 500, restitution:0.75}, this.scene);
-//     block.physicsBody?.setAngularVelocity(new Vector3(0, 0 , 0))
-// }

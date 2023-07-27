@@ -1,9 +1,9 @@
 import { Scene, ActionManager, ExecuteCodeAction, Observer, Scalar } from '@babylonjs/core';
 
 class InputController {
-    public inputMap: any
     private _scene: Scene
-
+    
+    public inputMap: any
     public horizontal = 0;
     public vertical = 0;
     public horizontalAxis = 0;
