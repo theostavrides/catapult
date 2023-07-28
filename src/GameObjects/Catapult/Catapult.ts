@@ -34,8 +34,9 @@ export class Catapult {
     private _updateFromControls(){
         this._deltaTime = this._scene.getEngine().getDeltaTime() / 1000.0;
         this._rotationY = this._input.rotation / 100 //right, x
-        this._movementZ = this._input.forward / 4 //fwd, z
+        this._movementZ = this._input.forward / 10 //fwd, z
         this.transformNode.rotate(new Vector3(0,1,0), this._rotationY, Space.WORLD)
+        this.transformNode.locallyTranslate(new Vector3(0,0,this._movementZ))
         // console.log(this.mesh.rotation.)
         // this._moveDirection.set(this._movementZ * this._rotationY,0, this._movementZ * this._rotationY) 
         // this.mesh.moveWithCollisions(this._moveDirection)
