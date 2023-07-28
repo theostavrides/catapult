@@ -1,5 +1,5 @@
 import { Scene } from "@babylonjs/core/scene";
-import { SceneLoader, AbstractMesh, Vector3, MeshBuilder, Mesh } from '@babylonjs/core'
+import { SceneLoader, AbstractMesh, Vector3, MeshBuilder, Mesh, Space } from '@babylonjs/core'
 import InputController from "../../InputController";
 
 
@@ -12,8 +12,8 @@ export class Catapult {
 
     // Movement Variables
     private _deltaTime = 0
-    private _h = 0
-    private _v = 0
+    private _movementZ = 0
+    private _rotationY = 0
     private _moveDirection = new Vector3()
     private _inputAmt = 0
 
@@ -31,12 +31,13 @@ export class Catapult {
 
     private _updateFromControls(){
         this._deltaTime = this._scene.getEngine().getDeltaTime() / 1000.0;
-        this._moveDirection = Vector3.Zero();
-        this._h = this._input.horizontal; //right, x
-        this._v = this._input.vertical; //fwd, z
-        console.log(this._h)
-        this._moveDirection = new Vector3(this._h/2, 0, this._v/2)
-        this.mesh.moveWithCollisions(this._moveDirection)
+        this._rotationY = this._input.rotation / 100 //right, x
+        this._movementZ = this._input.forward / 4 //fwd, z
+        this.mesh.rotate(new Vector3(0,1,0), this._rotationY, Space.WORLD)
+        // console.log(this.mesh.rotation.)
+        
+        // this._moveDirection.set(this._movementZ * this._rotationY,0, this._movementZ * this._rotationY) 
+        // this.mesh.moveWithCollisions(this._moveDirection)
     }
 
     private _registerLoop(){

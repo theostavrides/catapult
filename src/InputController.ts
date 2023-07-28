@@ -1,13 +1,13 @@
-import { Scene, ActionManager, ExecuteCodeAction, Observer, Scalar } from '@babylonjs/core';
+import { Scene, ActionManager, ExecuteCodeAction, Scalar } from '@babylonjs/core';
 
 class InputController {
     private _scene: Scene
     
     public inputMap: any
-    public horizontal = 0;
-    public vertical = 0;
-    public horizontalAxis = 0;
-    public verticalAxis = 0;
+    public rotation = 0;
+    public forward = 0;
+    public rotationAxis = 0;
+    public forwardAxis = 0;
     public firing = false
 
     constructor(scene: Scene) {
@@ -32,30 +32,28 @@ class InputController {
     private _updateFromKeyboard(){
         //forward - backwards movement
         if (this.inputMap["ArrowUp"]) {
-            this.verticalAxis = 1;
-            this.vertical = Scalar.Lerp(this.vertical, 1, 0.2);
+            this.forwardAxis = 1;
+            this.forward = Scalar.Lerp(this.forward, 1, 0.2);
 
         } else if (this.inputMap["ArrowDown"]) {
-            this.vertical = Scalar.Lerp(this.vertical, -1, 0.2);
-            this.verticalAxis = -1;
+            this.forward = Scalar.Lerp(this.forward, -1, 0.2);
+            this.forwardAxis = -1;
         } else {
-            this.vertical = 0;
-            this.verticalAxis = 0;
+            this.forward = 0;
+            this.forwardAxis = 0;
         }
 
         //left - right movement
         if (this.inputMap["ArrowLeft"]) {
-            //lerp will create a scalar linearly interpolated amt between start and end scalar
-            //taking current horizontal and how long you hold, will go up to -1(all the way left)
-            this.horizontal = Scalar.Lerp(this.horizontal, -1, 0.2);
-            this.horizontalAxis = -1;
+            this.rotation = Scalar.Lerp(this.rotation, -1, 0.2);
+            this.rotationAxis = -1;
 
         } else if (this.inputMap["ArrowRight"]) {
-            this.horizontal = Scalar.Lerp(this.horizontal, 1, 0.2);
-            this.horizontalAxis = 1;
+            this.rotation = Scalar.Lerp(this.rotation, 1, 0.2);
+            this.rotationAxis = 1;
         } else {
-            this.horizontal = 0;
-            this.horizontalAxis = 0;
+            this.rotation = 0;
+            this.rotationAxis = 0;
         }
 
         // fire catapult
