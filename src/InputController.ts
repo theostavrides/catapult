@@ -56,8 +56,8 @@ class InputController {
             this.rotationAxis = 0;
         }
 
-        // fire catapult
-        if (this.inputMap["Space"]) {
+        // Spacebar for shooting
+        if (this.inputMap[" "]) {
             this.shoot = true;
         } else {
             this.shoot = false;
