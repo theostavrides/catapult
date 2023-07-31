@@ -8,7 +8,7 @@ class InputController {
     public forward = 0;
     public rotationAxis = 0;
     public forwardAxis = 0;
-    public firing = false
+    public shoot = false
 
     constructor(scene: Scene) {
         this._scene = scene
@@ -58,9 +58,9 @@ class InputController {
 
         // fire catapult
         if (this.inputMap["Space"]) {
-            this.firing = true;
+            this.shoot = true;
         } else {
-            this.firing = false;
+            this.shoot = false;
         }
     }
 }

@@ -5,9 +5,11 @@ import { Scene } from "@babylonjs/core/scene";
 import { 
     MeshBuilder, Vector3, Color3, Color4, StandardMaterial,
     PhysicsAggregate, PhysicsShapeType, 
-    HemisphericLight, DirectionalLight,
+    HemisphericLight,
     FollowCamera,
 } from "@babylonjs/core";
+
+// import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
 import "@babylonjs/core/Physics/physicsEngineComponent";
 
 // If you don't need the standard material you will still need to import it since the scene requires it.
@@ -63,16 +65,22 @@ class TowerLevel implements Level {
 
     private _initLights(){
         new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
-        new DirectionalLight("DirectionalLight", new Vector3(0, -1, 0), this.scene);
+        // new DirectionalLight("DirectionalLight", new Vector3(0, -1, 0), this.scene);
     }
 
 
     private _initGround(){
-        const ground = MeshBuilder.CreateGround("ground", {width: 20, height: 20}, this.scene);
-        const material = new StandardMaterial("myMaterial", this.scene);
+        const ground = MeshBuilder.CreateGround("ground", {width: 100, height: 100}, this.scene);
+        const material = new StandardMaterial("groundMaterial", this.scene)
+
+        material.diffuseColor = new Color3(.5, .5, .5);
+        // material.specularColor = new Color3(0.5, 0.6, 0.87);
+        // material.emissiveColor = new Color3(1, 1, 1);
+        material.ambientColor = new Color3(0.23, 0.98, 0.53);
         ground.material = material
-        material.diffuseColor = new Color3(.5, .6, .6);
+
         new PhysicsAggregate(ground, PhysicsShapeType.BOX, { mass: 0 }, this.scene);
+
     }
 
     private _initDebugger(){
