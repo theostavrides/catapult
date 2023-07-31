@@ -76,16 +76,18 @@ export class Catapult {
         this._movementZ = this._input.forward / 7 //fwd, z
         
 
-        // Translation
+        // Catapult Translation
         this.transformNode.locallyTranslate(new Vector3(0,0,this._movementZ))
 
-        if (this._input.forwardAxis === 1){
-            this.transformNode.getChildren((n) => n.name.startsWith("Wheel"), false).filter(n => {
-                console.log(n.getChildMeshes())
+        // Wheel Rotation when moving forward or backwards
+        if (this._input.forwardAxis !== 0){
+            this.transformNode.getChildMeshes(false, (n) => n.name.startsWith("Wheel")).filter(n => {
+                const rotationAmount = -1 * this._movementZ / 5
+                n.rotate(new Vector3(0,1,0), rotationAmount)
             })
         }
         
-        // Rotation
+        // Catapult Rotation
         const rotationDirection = this._input.forwardAxis >= 0 ? 1 : -1
         this.transformNode.rotate(new Vector3(0,1,0), rotationDirection * this._rotationY, Space.WORLD)
 
@@ -147,13 +149,11 @@ export const createCatapult = async (scene: Scene, inputController: InputControl
     const root = result.meshes[0]
     
     const catapultModel = root.getChildren().find(c => c.name === "Catapult")
-    if (catapultModel) {
-        catapultModel.parent = transformNode
-    }
-    
-    // catapultChildren.forEach(c => {
-    //     console.log(c)
-    // })
+
+    catapultModel!.parent = transformNode
+
+    root.dispose()
+
 
 
 

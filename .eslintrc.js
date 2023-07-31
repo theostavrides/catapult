@@ -9,4 +9,9 @@ module.exports = {
       'plugin:@typescript-eslint/eslint-recommended',
       'plugin:@typescript-eslint/recommended',
     ],
+    rules: {
+        "no-empty": "off",
+        "no-empty-function": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+    }
   };
