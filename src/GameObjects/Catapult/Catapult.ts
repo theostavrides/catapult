@@ -75,24 +75,43 @@ export class Catapult {
         this._rotationY = this._input.rotation / 120 //right, x
         this._movementZ = this._input.forward / 7 //fwd, z
         
-
         // Catapult Translation
-        this.transformNode.locallyTranslate(new Vector3(0,0,this._movementZ))
+        if (this._input.forwardAxis !== 0) {
+            this.transformNode.locallyTranslate(new Vector3(0,0,this._movementZ))
+        }
 
-        // Wheel Rotation when moving forward or backwards
-        if (this._input.forwardAxis !== 0){
+        // Catapult Rotation
+        if (this._input.rotationAxis !== 0) {
+            const rotationDirection = this._input.forwardAxis >= 0 ? 1 : -1
+            this.transformNode.rotate(new Vector3(0,1,0), rotationDirection * this._rotationY, Space.WORLD)
+        }
+
+        // Wheel Rotation
+        if (this._input.forwardAxis === 0) {
+            if (this._input.rotationAxis !== 0) {
+                // Wheel Rotation when not moving forward or backwards but only turning
+                
+                const rotationAmount = this._input.rotationAxis * .015
+
+                this.transformNode.getChildMeshes(false, (n) => n.name.startsWith("Wheel.")).filter(n => {
+                    if (n.name === "Wheel.fr" || n.name === "Wheel.br") {
+                        n.rotate(new Vector3(0,1,0), -1 * rotationAmount)
+                    } else {
+                        n.rotate(new Vector3(0,1,0), rotationAmount)
+                    }
+                })
+            }
+        } else {
+            // Wheel Rotation when moving forward or backwards
             this.transformNode.getChildMeshes(false, (n) => n.name.startsWith("Wheel")).filter(n => {
                 const rotationAmount = -1 * this._movementZ / 5
                 n.rotate(new Vector3(0,1,0), rotationAmount)
             })
         }
-        
-        // Catapult Rotation
-        const rotationDirection = this._input.forwardAxis >= 0 ? 1 : -1
-        this.transformNode.rotate(new Vector3(0,1,0), rotationDirection * this._rotationY, Space.WORLD)
 
+ 
+        // Shoot
         if (this._input.shoot) {
-            console.log('oy!')
             this._fireCatapult()
         }
 
@@ -101,8 +120,7 @@ export class Catapult {
 
     private _registerLoop(){
         this._scene.registerBeforeRender(() => {
-            this._updateFromControls();
-            // this._updateCamera();
+            this._updateFromControls()
         })
     }
 }
