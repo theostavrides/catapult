@@ -7,6 +7,7 @@ import {
     PhysicsAggregate, PhysicsShapeType, 
     HemisphericLight,
     FollowCamera,
+    AssetContainer,
 } from "@babylonjs/core";
 
 // import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -20,7 +21,7 @@ import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { type Game } from "../Game";
 import { type Catapult, createCatapult } from "../GameObjects/Catapult";
 import InputController from "../InputController";
-import createRock, { Rock } from "../GameObjects/Rock";
+import createRockContainer, { Rock } from "../GameObjects/Rock";
 
 export interface Level {
     scene: Scene // The unique scene for the level
@@ -28,12 +29,12 @@ export interface Level {
 
 interface ITowerLevelAssets {
     catapult: Catapult,
-    rock: Rock
+    rockContainer: AssetContainer
 }
 
 interface ITowerLevelParams {
-    game: Game,
-    scene: Scene,
+    game: Game
+    scene: Scene
     assets: ITowerLevelAssets
     inputController: InputController
 }
@@ -41,6 +42,7 @@ interface ITowerLevelParams {
 class TowerLevel implements Level {
     scene: Scene
     game: Game
+    assets: ITowerLevelAssets
     catapult: Catapult
     private _input: InputController
 
@@ -48,6 +50,7 @@ class TowerLevel implements Level {
         this.scene = scene
         this.game = game
         this.catapult = assets.catapult
+        this.assets = assets
         this._input = inputController
 
         this._initCamera()
@@ -104,14 +107,14 @@ const createTowerLevel = async ({ game } : { game: Game }) => {
     const inputController = new InputController(scene)
     
     const getTowerLevelAssets = async (scene: Scene) : Promise<ITowerLevelAssets> => {        
-        const [catapult, rock] = await Promise.all([
+        const [catapult, rockContainer] = await Promise.all([
             createCatapult(scene, inputController),
-            createRock(scene)
+            createRockContainer(scene)
         ])
             
         return {
             catapult,
-            rock
+            rockContainer
         }
     }
     

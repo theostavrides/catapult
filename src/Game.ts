@@ -48,6 +48,9 @@ export class Game {
 
     private async _goToLevel(level_id: LevelEnum){        
         if (level_id === LevelEnum.TOWER) {
+            if (this.level) {
+                this.level.scene.dispose()
+            }
             this.level = await createTowerLevel({ game: this })
         }
 
