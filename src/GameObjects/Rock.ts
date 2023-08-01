@@ -15,22 +15,22 @@ export class Rock {
     }
 }
 
-export const createRockContainer = async (scene: Scene) => {
+export const createRock = async (scene: Scene) => {
     const result = await SceneLoader.ImportMeshAsync(["Rock"],'models/', 'catapult.glb', scene)
     
-    const container = new AssetContainer(scene)
-
     const root = result.meshes[0]
     
     const rockModel = root.getChildren().find(c => c.name === "Rock")
 
-    if (rockModel instanceof Mesh) {
-        container.meshes.push(rockModel)
+    const transformNode = new TransformNode('rock')
+
+    if (rockModel) {
+        rockModel.parent = transformNode
     }
 
     root.dispose()
  
-    return container
+    return new Rock(scene, transformNode)
 }
 
-export default createRockContainer
+export default createRock

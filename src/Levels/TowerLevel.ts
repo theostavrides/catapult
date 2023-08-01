@@ -7,7 +7,6 @@ import {
     PhysicsAggregate, PhysicsShapeType, 
     HemisphericLight,
     FollowCamera,
-    AssetContainer,
 } from "@babylonjs/core";
 
 // import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -21,7 +20,7 @@ import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { type Game } from "../Game";
 import { type Catapult, createCatapult } from "../GameObjects/Catapult";
 import InputController from "../InputController";
-import createRockContainer, { Rock } from "../GameObjects/Rock";
+import createRock, { Rock } from "../GameObjects/Rock";
 
 export interface Level {
     scene: Scene // The unique scene for the level
@@ -29,7 +28,7 @@ export interface Level {
 
 interface ITowerLevelAssets {
     catapult: Catapult,
-    rockContainer: AssetContainer
+    rock: Rock
 }
 
 interface ITowerLevelParams {
@@ -61,8 +60,6 @@ class TowerLevel implements Level {
 
     private _initCamera(){
         const camera = new FollowCamera("FollowCam", new Vector3(0, 4, 0), this.scene, this.catapult.cameraTarget)
-        // camera.maxCameraSpeed = 100; 
-        // camera.cameraAcceleration = 1;
         camera.rotationOffset = 180
         camera.heightOffset = 0
         camera.radius = 13
@@ -107,14 +104,14 @@ const createTowerLevel = async ({ game } : { game: Game }) => {
     const inputController = new InputController(scene)
     
     const getTowerLevelAssets = async (scene: Scene) : Promise<ITowerLevelAssets> => {        
-        const [catapult, rockContainer] = await Promise.all([
+        const [catapult, rock] = await Promise.all([
             createCatapult(scene, inputController),
-            createRockContainer(scene)
+            createRock(scene)
         ])
             
         return {
             catapult,
-            rockContainer
+            rock
         }
     }
     
