@@ -2,7 +2,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { 
     SceneLoader, Vector3, MeshBuilder, Mesh, Space, TransformNode, AnimationGroup, ISceneLoaderAsyncResult, setAndStartTimer
  } from '@babylonjs/core'
-import InputController from "../../InputController";
+import InputController from "../InputController";
 
 interface IAnimations {
     fire: AnimationGroup
@@ -43,7 +43,7 @@ export class Catapult {
         this.cameraTarget.visibility = 0
 
         this._registerLoop()        
-    }
+    } 
 
     private async _fireCatapult(){
         if (this._isFiring === false && this._isReloading === false) {
@@ -172,11 +172,7 @@ export const createCatapult = async (scene: Scene, inputController: InputControl
 
     root.dispose()
 
-
-
-
     const animations = reorganizeAnimationGroups(result, scene)
-
  
     return new Catapult(scene, transformNode, inputController, animations)
 }

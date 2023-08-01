@@ -18,15 +18,17 @@ import "@babylonjs/core/Materials/";
 import { havokModule } from "../externals/havok";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { type Game } from "../Game";
-import { type Catapult, createCatapult } from "../GameObjects/Catapult/Catapult";
+import { type Catapult, createCatapult } from "../GameObjects/Catapult";
 import InputController from "../InputController";
+import createRock, { Rock } from "../GameObjects/Rock";
 
 export interface Level {
     scene: Scene // The unique scene for the level
 }
 
 interface ITowerLevelAssets {
-    catapult: Catapult
+    catapult: Catapult,
+    rock: Rock
 }
 
 interface ITowerLevelParams {
@@ -74,8 +76,6 @@ class TowerLevel implements Level {
         const material = new StandardMaterial("groundMaterial", this.scene)
 
         material.diffuseColor = new Color3(.5, .5, .5);
-        // material.specularColor = new Color3(0.5, 0.6, 0.87);
-        // material.emissiveColor = new Color3(1, 1, 1);
         material.ambientColor = new Color3(0.23, 0.98, 0.53);
         ground.material = material
 
@@ -103,13 +103,15 @@ const createTowerLevel = async ({ game } : { game: Game }) => {
 
     const inputController = new InputController(scene)
     
-    const getTowerLevelAssets = async (scene: Scene) : Promise<ITowerLevelAssets> => {
-        const tasks = [createCatapult(scene, inputController)]
-        
-        const [catapult] = await Promise.all(tasks)
+    const getTowerLevelAssets = async (scene: Scene) : Promise<ITowerLevelAssets> => {        
+        const [catapult, rock] = await Promise.all([
+            createCatapult(scene, inputController),
+            createRock(scene)
+        ])
             
         return {
-            catapult
+            catapult,
+            rock
         }
     }
     
@@ -117,7 +119,7 @@ const createTowerLevel = async ({ game } : { game: Game }) => {
         return Promise.all([havokModule])
     }
 
-    const [assets] = await Promise.all([
+    const [assets, ] = await Promise.all([
         getTowerLevelAssets(scene), 
         loadTowerLevelModules
     ])
