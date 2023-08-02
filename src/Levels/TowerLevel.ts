@@ -164,22 +164,15 @@ const importAssets = async (scene: Scene) => {
     const reorganizeModels = () => {
         const root = scene.meshes[0]
 
-        const catapult = new TransformNode("CatapultModel", scene)
+        const catapult = new TransformNode("Catapult", scene)
         const rock = new TransformNode("RockModel", scene)
 
         const catapultModel = root.getChildren().find(c => c.name === "Catapult")
         catapultModel!.parent = catapult
 
-
         const rockModel = root.getChildren().find(c => c.name === "Rock")
         rockModel!.parent = rock
-
-        // Disables the mesh as we will only use this as a reference to clone
-        // const disableModel = (node: TransformNode) => {
-        //     node.getChildMeshes().forEach(m => m.setEnabled(false))
-        // }
-
-        // [catapult, rock].forEach(disableModel)
+        rockModel?.setEnabled(false)
 
         root.dispose()
 

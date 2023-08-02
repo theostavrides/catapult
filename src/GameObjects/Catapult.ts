@@ -35,10 +35,6 @@ export class Catapult {
 
         this.transformNode = this.level.assets.catapult
 
-        // this.level.assets.catapult.clone('CatapultClone', this.transformNode)
-        // this.transformNode.getChildMeshes().forEach(m => m.setEnabled(true))
-        // this.level.scene.
-
         // Set up follow camera
         this.cameraTarget = MeshBuilder.CreateBox("cameraTarget", {size: .25 }, this.level.scene)
         this.cameraTarget.position = new Vector3(0, 4.75, 0);
@@ -51,9 +47,10 @@ export class Catapult {
             reload: this.level.scene.animationGroups.find(ag => ag.name === "reload_clean")!,
         }
 
+        // Put catapul into firing position
         this._animations.reload.play()
         this._animations.reload.goToFrame(this._animations.reload.to)
-        // this._animations.reload.stop()
+        this._animations.reload.stop()
 
         this._registerLoop()        
     } 
