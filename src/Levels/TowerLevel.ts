@@ -121,33 +121,14 @@ const importModelsAndAnimations = async (scene: Scene) => {
     // Add models to the existing scene.
     await SceneLoader.AppendAsync('models/','catapult.glb', scene)
 
-    const reorganizeModels = () => {
-        const root = scene.meshes[0]
-
-        const catapultTransformNode = new TransformNode("CatapultModel", scene)
-        const rockTransformNode = new TransformNode("RockModel", scene)
-
-        const catapultModel = root.getChildren().find(c => c.name === "Catapult")
-        catapultModel!.parent = catapultTransformNode
-
-        const rockModel = root.getChildren().find(c => c.name === "Rock")
-        rockModel!.parent = rockTransformNode
-    
-        // Disable the mesh as we will only use this as a reference to clone
-        const disableModel = (node: TransformNode) => {
-            node.getChildMeshes().forEach(m => m.setEnabled(false))
-        }
-
-        // disableModel(catapultTransformNode)
-        // disableModel(rockTransformNode)
-
-        root.dispose()
-    }
-
     const reorganizeAnimationGroups = () => {    
         const fireAnimationGroup = new AnimationGroup('fire_clean', scene)
         const reloadAnimationGroup = new AnimationGroup('reload_clean', scene)
        
+        // Disposing of animation groups in the animationGroups.forEach below doesn't work
+        // because dispose() removes the animationGroup from the animationGroups array
+        // that we are currently iterating over.  Instead keep track of the refs in the
+        // toDispose array and dispose after we are done the loop.
         const toDispose: AnimationGroup[] = []
 
         scene.animationGroups.forEach(ag => {
@@ -168,21 +149,32 @@ const importModelsAndAnimations = async (scene: Scene) => {
         })
 
         toDispose.forEach(ag => ag.dispose())
+    }
 
-        // scene.animationGroups.forEach(animG => {
-        //     if (!animG.name.endsWith('_clean')){
-        //         animG.dispose()
-        //     }
-        // })
+    const reorganizeModels = () => {
+        const root = scene.meshes[0]
 
-        // scene.animationGroups.push(fireAnimationGroup)
-        // scene.animationGroups.push(reloadAnimationGroup)
+        const catapultTransformNode = new TransformNode("CatapultModel", scene)
+        const rockTransformNode = new TransformNode("RockModel", scene)
 
-        console.log(scene.animationGroups)
+        const catapultModel = root.getChildren().find(c => c.name === "Catapult")
+        catapultModel!.parent = catapultTransformNode
+
+        const rockModel = root.getChildren().find(c => c.name === "Rock")
+        rockModel!.parent = rockTransformNode
+    
+        // Disables the mesh as we will only use this as a reference to clone
+        const disableModel = (node: TransformNode) => {
+            node.getChildMeshes().forEach(m => m.setEnabled(false))
+        }
+
+        [catapultTransformNode, rockTransformNode].forEach(disableModel)
+
+        root.dispose()
     }
 
     reorganizeAnimationGroups()
-    // reorganizeModels()
+    reorganizeModels()
 
 }
 
