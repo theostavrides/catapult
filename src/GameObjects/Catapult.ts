@@ -161,6 +161,7 @@ const reorganizeAnimationGroups = (result: ISceneLoaderAsyncResult, scene: Scene
 }
 
 export const createCatapult = async (scene: Scene, inputController: InputController) => {
+    console.log('wtf?')
     const result = await SceneLoader.ImportMeshAsync(["Catapult"],'models/', 'catapult.glb', scene)
     
     const transformNode = new TransformNode("CatapultTransformNode")

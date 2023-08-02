@@ -30,7 +30,7 @@ export const createRock = async (scene: Scene) => {
 
     root.dispose()
  
-    return new Rock(scene, transformNode)
+    return transformNode
 }
 
 export default createRock
