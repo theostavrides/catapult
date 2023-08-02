@@ -13,6 +13,9 @@ import {
     FreeCamera,
     AnimationGroup,
     UniversalCamera,
+    Node,
+    AbstractMesh,
+    Mesh,
 } from "@babylonjs/core";
 
 // import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -43,7 +46,9 @@ interface ITowerLevelParams {
 
 interface IAssets {
     catapult: TransformNode,
-    rock: TransformNode,
+    clonables: {
+        rock: TransformNode,
+    }
 }
 
 class TowerLevel implements Level {
@@ -164,21 +169,28 @@ const importAssets = async (scene: Scene) => {
     const reorganizeModels = () => {
         const root = scene.meshes[0]
 
-        const catapult = new TransformNode("Catapult", scene)
-        const rock = new TransformNode("RockModel", scene)
+        // Non-clonables
 
+        const catapult = new TransformNode("Catapult", scene)
+        
         const catapultModel = root.getChildren().find(c => c.name === "Catapult")
         catapultModel!.parent = catapult
+        
+        // Clonables
+        const rock = new TransformNode("RockForCloning", scene)
 
         const rockModel = root.getChildren().find(c => c.name === "Rock")
         rockModel!.parent = rock
-        rockModel?.setEnabled(false)
+        rock?.setEnabled(false) // Disable this object as it will just be used for cloning
+
 
         root.dispose()
 
         return {
             catapult,
-            rock,
+            clonables: {
+                rock,
+            }
         }
     }
 

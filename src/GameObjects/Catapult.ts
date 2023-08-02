@@ -1,7 +1,7 @@
 import { Scene } from "@babylonjs/core/scene";
 import { 
     Vector3, MeshBuilder, Mesh, Space, TransformNode, 
-    AnimationGroup, ISceneLoaderAsyncResult, setAndStartTimer
+    AnimationGroup, setAndStartTimer, AbstractMesh
  } from '@babylonjs/core'
 import { Level } from "../Levels/TowerLevel";
 
@@ -13,6 +13,7 @@ interface IAnimations {
 export class Catapult {
     level: Level
     transformNode: TransformNode
+    bucket: AbstractMesh
     cameraTarget: Mesh
     
     private _animations: IAnimations
@@ -34,6 +35,7 @@ export class Catapult {
         this.level = level
 
         this.transformNode = this.level.assets.catapult
+        this.bucket = this.transformNode.getChildMeshes().find(m => m.name === "Bucket")!
 
         // Set up follow camera
         this.cameraTarget = MeshBuilder.CreateBox("cameraTarget", {size: .25 }, this.level.scene)
@@ -47,19 +49,30 @@ export class Catapult {
             reload: this.level.scene.animationGroups.find(ag => ag.name === "reload_clean")!,
         }
 
-        // Put catapul into firing position
+        // Put catapult into firing position
         this._animations.reload.play()
         this._animations.reload.goToFrame(this._animations.reload.to)
         this._animations.reload.stop()
 
+        // Load rock into bucket
+        this._loadRock()
+
         this._registerLoop()        
     } 
+
+    private async _loadRock(){
+        const rock = this.level.assets.clonables.rock.clone('rock', null)!
+        rock.parent = this.bucket
+        rock.position = new Vector3(0, -.12,-.128)
+        // const bucketPos = this.bucket.getAbsolutePosition()
+        // rock.position = this.bucket.getAbsolutePosition().clone()
+        // rock.position.y += 0.5
+    }
 
     private async _fireCatapult(){
         if (this._isFiring === false && this._isReloading === false) {
             this._isFiring = true
             this._animations.fire.play()
-            console.log('oy!')
 
             this._animations.fire.onAnimationGroupEndObservable.add(() => {
                 this._isReloading = true
