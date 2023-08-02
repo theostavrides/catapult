@@ -33,10 +33,10 @@ export class Catapult {
     ){
         this.level = level
 
-        this.transformNode = new TransformNode('cc')
+        this.transformNode = this.level.assets.catapult
 
-        this.level.assets.catapult.clone('CatapultClone', this.transformNode)
-        this.transformNode.getChildMeshes().forEach(m => m.setEnabled(true))
+        // this.level.assets.catapult.clone('CatapultClone', this.transformNode)
+        // this.transformNode.getChildMeshes().forEach(m => m.setEnabled(true))
         // this.level.scene.
 
         // Set up follow camera
@@ -53,7 +53,7 @@ export class Catapult {
 
         this._animations.reload.play()
         this._animations.reload.goToFrame(this._animations.reload.to)
-        this._animations.reload.stop()
+        // this._animations.reload.stop()
 
         this._registerLoop()        
     } 
@@ -62,6 +62,7 @@ export class Catapult {
         if (this._isFiring === false && this._isReloading === false) {
             this._isFiring = true
             this._animations.fire.play()
+            console.log('oy!')
 
             this._animations.fire.onAnimationGroupEndObservable.add(() => {
                 this._isReloading = true

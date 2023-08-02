@@ -175,11 +175,11 @@ const importAssets = async (scene: Scene) => {
         rockModel!.parent = rock
 
         // Disables the mesh as we will only use this as a reference to clone
-        const disableModel = (node: TransformNode) => {
-            node.getChildMeshes().forEach(m => m.setEnabled(false))
-        }
+        // const disableModel = (node: TransformNode) => {
+        //     node.getChildMeshes().forEach(m => m.setEnabled(false))
+        // }
 
-        [catapult, rock].forEach(disableModel)
+        // [catapult, rock].forEach(disableModel)
 
         root.dispose()
 
@@ -189,8 +189,8 @@ const importAssets = async (scene: Scene) => {
         }
     }
 
-    addCleanAnimationGroupsToScene()
     const models = reorganizeModels()
+    addCleanAnimationGroupsToScene()
 
     return models
 }
