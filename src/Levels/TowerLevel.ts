@@ -10,6 +10,7 @@ import {
     SceneLoader,
     AnimationGroup,
     Mesh,
+    DirectionalLight,
 } from "@babylonjs/core";
 
 // import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -68,17 +69,25 @@ class TowerLevel implements Level {
     }
 
     private _initLights(){
-        new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
-        // new DirectionalLight("DirectionalLight", new Vector3(0, -1, 0), this.scene);
+        // new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
+        const dl = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 0), this.scene);
+        const dl2 = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, 1), this.scene);
+        const dl3 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, -1), this.scene);
+        const dl4 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 1), this.scene);
+        [dl,dl2,dl3,dl4].forEach(l => l.intensity = 0.5)
+
+        dl.intensity = 2
     }
 
 
     private _initGround(){
         const ground = MeshBuilder.CreateGround("ground", {width: 100, height: 100}, this.scene);
         const material = new StandardMaterial("groundMaterial", this.scene)
+        material.specularColor = new Color3(.2 , .2, .2)
+        material.diffuseColor = new Color3(.2, .2, .2)
+        material.ambientColor = new Color3(.2, .2, .2)
+        material.roughness = 0.7
 
-        material.diffuseColor = new Color3(.5, .5, .5);
-        material.ambientColor = new Color3(0.23, 0.98, 0.53);
         ground.material = material
 
         new PhysicsAggregate(ground, PhysicsShapeType.BOX, { mass: 0 }, this.scene);
