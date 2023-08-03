@@ -8,14 +8,8 @@ import {
     FollowCamera,
     TransformNode,
     SceneLoader,
-    AssetContainer,
-    FreeCamera,
     AnimationGroup,
-    UniversalCamera,
-    Node,
-    AbstractMesh,
     Mesh,
-    PhysicsViewer,
 } from "@babylonjs/core";
 
 // import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -66,7 +60,7 @@ class TowerLevel implements Level {
         this._init()
     }
 
-    private _initCamera(cameraTarget: any){
+    private _initCamera(cameraTarget: Mesh){
         const camera = new FollowCamera("FollowCam", new Vector3(0, 4, 0), this.scene, cameraTarget)
         camera.rotationOffset = 180
         camera.heightOffset = 0

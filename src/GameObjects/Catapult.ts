@@ -1,7 +1,6 @@
-import { Scene } from "@babylonjs/core/scene";
 import { 
     Vector3, MeshBuilder, Mesh, Space, TransformNode, 
-    AnimationGroup, setAndStartTimer, AbstractMesh, AxesViewer, PhysicsShapeSphere, PhysicsBody, PhysicsMotionType, PhysicsViewer, PhysicsAggregate, PhysicsShapeType
+    AnimationGroup, setAndStartTimer, AbstractMesh, PhysicsShapeSphere, PhysicsAggregate, PhysicsShapeType
  } from '@babylonjs/core'
 import { Level } from "../Levels/TowerLevel";
 
