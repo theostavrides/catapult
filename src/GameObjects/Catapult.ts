@@ -1,7 +1,7 @@
 import { Scene } from "@babylonjs/core/scene";
 import { 
     Vector3, MeshBuilder, Mesh, Space, TransformNode, 
-    AnimationGroup, setAndStartTimer, AbstractMesh, AxesViewer, PhysicsShapeSphere, PhysicsBody, PhysicsMotionType, PhysicsViewer
+    AnimationGroup, setAndStartTimer, AbstractMesh, AxesViewer, PhysicsShapeSphere, PhysicsBody, PhysicsMotionType, PhysicsViewer, PhysicsAggregate, PhysicsShapeType
  } from '@babylonjs/core'
 import { Level } from "../Levels/TowerLevel";
 
@@ -14,7 +14,7 @@ export class Catapult {
     level: Level
     transformNode: TransformNode
     bucket: AbstractMesh
-    projectile?: TransformNode
+    projectile: TransformNode|null = null
     cameraTarget: Mesh
     
     private _animations: IAnimations
@@ -73,14 +73,13 @@ export class Catapult {
             this._animations.fire.play()
 
             this._animations.fire.onAnimationGroupEndObservable.add(() => {
-                if (this.projectile){
-                    const oldPosition = this.projectile.absolutePosition.clone()
-                    this.projectile.parent = null
-                    this.projectile.position = oldPosition
-                    
-                    const viewer = new PhysicsViewer(this.level.scene)
+                if (this.projectile){                    
+                    // const viewer = new PhysicsViewer(this.level.scene)
 
-                    const body = new PhysicsBody(this.projectile, PhysicsMotionType.DYNAMIC, false, this.level.scene)
+                    const oldPosition = this.projectile.getAbsolutePosition()
+                    this.projectile.parent = null
+                    this.projectile.position = oldPosition.clone()
+
 
                     const shape = new PhysicsShapeSphere(
                         new Vector3(0,0,0), // center of the sphere in local space
@@ -88,11 +87,11 @@ export class Catapult {
                         this.level.scene // containing scene
                     );
 
-                    body.shape = shape
-
-                    body.applyImpulse(new Vector3(0,10,10), this.projectile.getAbsolutePosition())
+                    new PhysicsAggregate(this.projectile, PhysicsShapeType.SPHERE, { mass: 100, restitution:0.75, shape}, this.level.scene);
+                    this.projectile.physicsBody?.setLinearVelocity(new Vector3(0, 10, 40))
                     
-                    viewer.showBody(body);
+                    // viewer.showBody(body);
+                    this.projectile = null
          
                 }
 

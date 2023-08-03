@@ -88,7 +88,6 @@ class TowerLevel implements Level {
         ground.material = material
 
         new PhysicsAggregate(ground, PhysicsShapeType.BOX, { mass: 0 }, this.scene);
-
     }
 
     private _initDebugger(){
