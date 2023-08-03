@@ -1,7 +1,7 @@
 import { Scene } from "@babylonjs/core/scene";
 import { 
     Vector3, MeshBuilder, Mesh, Space, TransformNode, 
-    AnimationGroup, setAndStartTimer, AbstractMesh
+    AnimationGroup, setAndStartTimer, AbstractMesh, AxesViewer
  } from '@babylonjs/core'
 import { Level } from "../Levels/TowerLevel";
 
@@ -14,6 +14,7 @@ export class Catapult {
     level: Level
     transformNode: TransformNode
     bucket: AbstractMesh
+    projectile?: TransformNode
     cameraTarget: Mesh
     
     private _animations: IAnimations
@@ -55,18 +56,15 @@ export class Catapult {
         this._animations.reload.stop()
 
         // Load rock into bucket
-        this._loadRock()
+        this._loadProjectile()
 
         this._registerLoop()        
     } 
 
-    private async _loadRock(){
-        const rock = this.level.assets.clonables.rock.clone('rock', null)!
-        rock.parent = this.bucket
-        rock.position = new Vector3(0, -.12,-.128)
-        // const bucketPos = this.bucket.getAbsolutePosition()
-        // rock.position = this.bucket.getAbsolutePosition().clone()
-        // rock.position.y += 0.5
+    private async _loadProjectile(){
+        this.projectile = this.level.assets.clonables.rock.clone('rock', null)!
+        this.projectile.parent = this.bucket
+        this.projectile.position = new Vector3(0, -.12,-.128)
     }
 
     private async _fireCatapult(){
@@ -75,9 +73,15 @@ export class Catapult {
             this._animations.fire.play()
 
             this._animations.fire.onAnimationGroupEndObservable.add(() => {
+                if (this.projectile){
+                    this.projectile.parent = null
+                }
+
+
                 this._isReloading = true
                 this._isFiring = false
 
+                // Reload after 1 second pause
                 setAndStartTimer({
                     timeout: 1000, 
                     contextObservable: this.level.scene.onBeforeRenderObservable,

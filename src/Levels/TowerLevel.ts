@@ -172,13 +172,12 @@ const importAssets = async (scene: Scene) => {
         // Non-clonables
 
         const catapult = new TransformNode("Catapult", scene)
-        
         const catapultModel = root.getChildren().find(c => c.name === "Catapult")
         catapultModel!.parent = catapult
         
         // Clonables
-        const rock = new TransformNode("RockForCloning", scene)
 
+        const rock = new TransformNode("RockForCloning", scene)
         const rockModel = root.getChildren().find(c => c.name === "Rock")
         rockModel!.parent = rock
         rock?.setEnabled(false) // Disable this object as it will just be used for cloning
