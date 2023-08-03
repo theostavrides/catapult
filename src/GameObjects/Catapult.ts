@@ -73,22 +73,34 @@ export class Catapult {
             this._animations.fire.play()
 
             this._animations.fire.onAnimationGroupEndObservable.add(() => {
+                // this.transformNode.computeWorldMatrix(true)
+
+                
                 if (this.projectile){                    
                     // const viewer = new PhysicsViewer(this.level.scene)
-
+                    
                     const oldPosition = this.projectile.getAbsolutePosition()
                     this.projectile.parent = null
                     this.projectile.position = oldPosition.clone()
-
-
+                    
+                    
                     const shape = new PhysicsShapeSphere(
                         new Vector3(0,0,0), // center of the sphere in local space
                         0.2, // radius of the sphere
                         this.level.scene // containing scene
-                    );
-
+                        );
+                        
+                        
                     new PhysicsAggregate(this.projectile, PhysicsShapeType.SPHERE, { mass: 100, restitution:0.75, shape}, this.level.scene);
-                    this.projectile.physicsBody?.setLinearVelocity(new Vector3(0, 10, 40))
+                    
+                    
+                    const catapultRotation = this.transformNode.rotationQuaternion?.toEulerAngles()
+
+                    const projectileSpeed = 40
+                    const velocityX = projectileSpeed * Math.sin(catapultRotation!.y)
+                    const velocityY = projectileSpeed * Math.cos(catapultRotation!.y)
+
+                    this.projectile.physicsBody?.setLinearVelocity(new Vector3(velocityX, 10, velocityY))
                     
                     // viewer.showBody(body);
                     this.projectile = null
