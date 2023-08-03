@@ -1,7 +1,7 @@
 import { Scene } from "@babylonjs/core/scene";
 import { 
     Vector3, MeshBuilder, Mesh, Space, TransformNode, 
-    AnimationGroup, setAndStartTimer, AbstractMesh, AxesViewer
+    AnimationGroup, setAndStartTimer, AbstractMesh, AxesViewer, PhysicsShapeSphere, PhysicsBody, PhysicsMotionType, PhysicsViewer
  } from '@babylonjs/core'
 import { Level } from "../Levels/TowerLevel";
 
@@ -74,7 +74,26 @@ export class Catapult {
 
             this._animations.fire.onAnimationGroupEndObservable.add(() => {
                 if (this.projectile){
+                    const oldPosition = this.projectile.absolutePosition.clone()
                     this.projectile.parent = null
+                    this.projectile.position = oldPosition
+                    
+                    const viewer = new PhysicsViewer(this.level.scene)
+
+                    const body = new PhysicsBody(this.projectile, PhysicsMotionType.DYNAMIC, false, this.level.scene)
+
+                    const shape = new PhysicsShapeSphere(
+                        new Vector3(0,0,0), // center of the sphere in local space
+                        0.2, // radius of the sphere
+                        this.level.scene // containing scene
+                    );
+
+                    body.shape = shape
+
+                    body.applyImpulse(new Vector3(0,10,10), this.projectile.getAbsolutePosition())
+                    
+                    viewer.showBody(body);
+         
                 }
 
 

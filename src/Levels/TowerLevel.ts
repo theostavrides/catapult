@@ -1,4 +1,3 @@
-// import { Inspector } from '@babylonjs/inspector';
 
 import "@babylonjs/loaders/glTF";
 import { Scene } from "@babylonjs/core/scene";
@@ -16,6 +15,7 @@ import {
     Node,
     AbstractMesh,
     Mesh,
+    PhysicsViewer,
 } from "@babylonjs/core";
 
 // import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -116,7 +116,7 @@ class TowerLevel implements Level {
 
 const createTowerLevel = async ({ game } : { game: Game }) => {
     const scene = new Scene(game.engine)
-    scene.enablePhysics(null, new HavokPlugin(true, await havokModule));
+    scene.enablePhysics(new Vector3(0, -9.81, 0), new HavokPlugin(true, await havokModule));
     scene.clearColor = new Color4(0, 0, 0, 1);
 
     const inputController = new InputController(scene)
