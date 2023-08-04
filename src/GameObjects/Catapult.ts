@@ -1,6 +1,6 @@
 import { 
     Vector3, MeshBuilder, Mesh, Space, TransformNode, 
-    AnimationGroup, setAndStartTimer, AbstractMesh, PhysicsShapeSphere, PhysicsAggregate, PhysicsShapeType
+    AnimationGroup, setAndStartTimer, AbstractMesh, PhysicsShapeSphere, PhysicsAggregate, PhysicsShapeType, PhysicsViewer, PhysicsBody, PhysicsMotionType, Sound
  } from '@babylonjs/core'
 import { Level } from "../Levels/TowerLevel";
 
@@ -30,11 +30,16 @@ export class Catapult {
     private _isReloading = false
 
     constructor(
-        level: Level
+        level: Level,
+        position: Vector3 = new Vector3(0,0,0),
+        rotation: Vector3 = new Vector3(0,0,0),
     ){
         this.level = level
 
         this.transformNode = this.level.assets.catapult
+        this.transformNode.position = position
+        this.transformNode.rotation = rotation
+
         this.bucket = this.transformNode.getChildMeshes().find(m => m.name === "Bucket")!
 
         // Set up follow camera
@@ -57,6 +62,8 @@ export class Catapult {
         // Load rock into bucket
         this._loadProjectile()
 
+        this._initAnimationObservables()
+
         this._registerLoop()        
     } 
 
@@ -66,64 +73,68 @@ export class Catapult {
         this.projectile.position = new Vector3(0, -.12,-.128)
     }
 
+    private async _initAnimationObservables(){
+        this._animations.reload.onAnimationGroupEndObservable.add(() => {
+            this._isReloading = false
+            this._loadProjectile()
+        })
+
+        this._animations.fire.onAnimationGroupEndObservable.add(() => {                
+            if (this.projectile){                    
+                // const viewer = new PhysicsViewer(this.level.scene)
+                
+                const oldPosition = this.projectile.getAbsolutePosition()
+                this.projectile.parent = null
+                this.projectile.position = oldPosition.clone()
+                
+                const shape = new PhysicsShapeSphere(
+                    new Vector3(0,0,0), // center of the sphere in local space
+                    .2, // radius of the sphere
+                    this.level.scene // containing scene
+                );
+
+                const body = new PhysicsBody(this.projectile, PhysicsMotionType.DYNAMIC, false, this.level.scene)
+                body.shape = shape
+                body.setMassProperties({ mass: 500 })
+                
+                const catapultRotation = this.transformNode.rotationQuaternion?.toEulerAngles() || this.transformNode.rotation
+
+                const projectileSpeed = 50
+                const velocityX = projectileSpeed * Math.sin(catapultRotation!.y)
+                const velocityY = projectileSpeed * Math.cos(catapultRotation!.y)
+
+                this.projectile.physicsBody?.setLinearVelocity(new Vector3(velocityX, 10, velocityY))
+                
+                // viewer.showBody(this.projectile.physicsBody!);
+                this.projectile = null
+            }
+
+            this._isReloading = true
+            this._isFiring = false
+
+            // Reload after 1 second pause
+            setAndStartTimer({
+                timeout: 1000, 
+                contextObservable: this.level.scene.onBeforeAnimationsObservable,
+                onEnded: () => {
+                    this._animations.reload.play()
+                }
+            })
+        })
+
+    }
+
     private async _fireCatapult(){
         if (this._isFiring === false && this._isReloading === false) {
             this._isFiring = true
             this._animations.fire.play()
 
-            this._animations.fire.onAnimationGroupEndObservable.add(() => {
-                // this.transformNode.computeWorldMatrix(true)
-
-                
-                if (this.projectile){                    
-                    // const viewer = new PhysicsViewer(this.level.scene)
-                    
-                    const oldPosition = this.projectile.getAbsolutePosition()
-                    this.projectile.parent = null
-                    this.projectile.position = oldPosition.clone()
-                    
-                    
-                    const shape = new PhysicsShapeSphere(
-                        new Vector3(0,0,0), // center of the sphere in local space
-                        0.2, // radius of the sphere
-                        this.level.scene // containing scene
-                        );
-                        
-                        
-                    new PhysicsAggregate(this.projectile, PhysicsShapeType.SPHERE, { mass: 100, restitution:0.75, shape}, this.level.scene);
-                    
-                    
-                    const catapultRotation = this.transformNode.rotationQuaternion?.toEulerAngles()
-
-                    const projectileSpeed = 40
-                    const velocityX = projectileSpeed * Math.sin(catapultRotation!.y)
-                    const velocityY = projectileSpeed * Math.cos(catapultRotation!.y)
-
-                    this.projectile.physicsBody?.setLinearVelocity(new Vector3(velocityX, 10, velocityY))
-                    
-                    // viewer.showBody(body);
-                    this.projectile = null
-         
-                }
-
-
-                this._isReloading = true
-                this._isFiring = false
-
-                // Reload after 1 second pause
-                setAndStartTimer({
-                    timeout: 1000, 
-                    contextObservable: this.level.scene.onBeforeRenderObservable,
-                    onEnded: () => {
-                        this._animations.reload.play()
-        
-                        this._animations.reload.onAnimationGroupEndObservable.add(() => {
-                            this._isReloading = false
-                        })
-                    }
-                })
-            })
-
+            const catapultFiringSound = new Sound("catapultFiringSound", "sound/catapult_firing_sound.mp3", this.level.scene, function () {
+                catapultFiringSound.play();
+            }, {
+                playbackRate: 1.5,
+                offset: .3
+            });
         }
     }
 
@@ -166,14 +177,11 @@ export class Catapult {
             })
         }
 
- 
         // Shoot
         if (this.level.inputController.shoot) {
             this._fireCatapult()
         }
-
     }
-
 
     private _registerLoop(){
         this.level.scene.registerBeforeRender(() => {

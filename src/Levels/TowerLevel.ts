@@ -4,13 +4,13 @@ import { Scene } from "@babylonjs/core/scene";
 import { 
     MeshBuilder, Vector3, Color3, Color4, StandardMaterial,
     PhysicsAggregate, PhysicsShapeType, 
-    HemisphericLight,
     FollowCamera,
     TransformNode,
     SceneLoader,
     AnimationGroup,
     Mesh,
     DirectionalLight,
+    HemisphericLight,
 } from "@babylonjs/core";
 
 // import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -69,19 +69,18 @@ class TowerLevel implements Level {
     }
 
     private _initLights(){
-        // new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
-        const dl = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 0), this.scene);
-        const dl2 = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, 1), this.scene);
-        const dl3 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, -1), this.scene);
+        new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
+        // const dl = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 0), this.scene);
+        // const dl2 = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, 1), this.scene);
+        // const dl3 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, -1), this.scene);
         const dl4 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 1), this.scene);
-        [dl,dl2,dl3,dl4].forEach(l => l.intensity = 0.5)
+        // [dl,dl2,dl3,dl4].forEach(l => l.intensity = 0.5)
 
-        dl.intensity = 2
     }
 
 
     private _initGround(){
-        const ground = MeshBuilder.CreateGround("ground", {width: 100, height: 100}, this.scene);
+        const ground = MeshBuilder.CreateGround("ground", {width: 200, height: 200}, this.scene);
         const material = new StandardMaterial("groundMaterial", this.scene)
         material.specularColor = new Color3(.2 , .2, .2)
         material.diffuseColor = new Color3(.2, .2, .2)
@@ -105,12 +104,51 @@ class TowerLevel implements Level {
         })
     }
 
+    private _initBlocks(){
+        const width = 3
+        const depth = 3
+        const height = 3
+
+        const numX = 4
+        const numY = 12
+        const numZ = 1
+
+        const xOffset = numX * width / 2
+        const zOffset = 2
+
+        const mass = 100
+
+        const box = MeshBuilder.CreateBox("box", { height, depth, width }, this.scene);
+        const material = new StandardMaterial("boxMat", this.scene);
+        box.registerInstancedBuffer("instanceColor", 4);
+        box.instancedBuffers.instanceColor = new Color4(0,0,0,1);
+        material.diffuseColor = Color3.Random();    
+        box.material = material
+        box.setEnabled(false)
+        
+        for (let x = 0; x < numX; x++) {
+            for (let y = 0; y < numY; y++) {
+                for (let z = 0; z < numZ; z++) {
+                    const boxInstance = box.createInstance(`box-${x}${y}${z}`)
+                    
+                    boxInstance.position = new Vector3(x * (width * 2) - xOffset, y * height, z * depth - zOffset)
+                    
+                    new PhysicsAggregate(boxInstance, PhysicsShapeType.BOX, { mass }, this.scene);
+
+                    boxInstance.instancedBuffers.instanceColor = new Color4(Math.random(), Math.random(), Math.random(), 1);
+                }
+            }
+        }
+    }
+
     private _init(){
         this._initLights()        
         this._initGround()
         this._initDebugger()
-        
-        const catapult = new Catapult(this)
+        this._initBlocks()
+
+        const catapult = new Catapult(this, new Vector3(0,0,-90), new Vector3(0,0,0))
+
 
         this._initCamera(catapult.cameraTarget)
     }
