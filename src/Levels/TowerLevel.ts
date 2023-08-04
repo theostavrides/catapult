@@ -11,6 +11,7 @@ import {
     Mesh,
     DirectionalLight,
     HemisphericLight,
+    Sound,
 } from "@babylonjs/core";
 
 // import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -105,16 +106,16 @@ class TowerLevel implements Level {
     }
 
     private _initBlocks(){
-        const width = 3
-        const depth = 3
+        const width = 1
+        const depth = 1
         const height = 3
 
-        const numX = 4
-        const numY = 12
+        const numX = 1
+        const numY = 50
         const numZ = 1
 
         const xOffset = numX * width / 2
-        const zOffset = 2
+        const zOffset = -50
 
         const mass = 100
 
@@ -131,11 +132,29 @@ class TowerLevel implements Level {
                 for (let z = 0; z < numZ; z++) {
                     const boxInstance = box.createInstance(`box-${x}${y}${z}`)
                     
-                    boxInstance.position = new Vector3(x * (width * 2) - xOffset, y * height, z * depth - zOffset)
+                    boxInstance.position = new Vector3(x * (width * 2) - xOffset, (y * height) + (height*.5), z * (depth * 2) - zOffset)
                     
                     new PhysicsAggregate(boxInstance, PhysicsShapeType.BOX, { mass }, this.scene);
 
-                    boxInstance.instancedBuffers.instanceColor = new Color4(Math.random(), Math.random(), Math.random(), 1);
+                    boxInstance.instancedBuffers.instanceColor = new Color4(Math.random(), Math.random(), Math.random(), 1)
+
+                    // boxInstance.physicsBody?.setCollisionCallbackEnabled(true)
+
+                    // boxInstance.physicsBody?.getCollisionObservable().add((eventData) => {
+                    //     if (eventData.distance > 1) {
+                    //         const soundNumber = Math.floor(Math.random() * 6 + 1)
+                    //         const catapultFiringSound = new Sound("crash", `sound/crash/${soundNumber}.wav`, this.scene, function () {
+                    //             catapultFiringSound.play();
+                    //         }, {
+                    //             playbackRate: Math.random() + 0.5,
+                    //             // offset: .3
+                    //             volume: eventData.distance / 7
+                    //         });
+                    //     }
+                    // });
+                    // boxInstance.checkCollisions = true
+
+                    // boxInstance.onCollideObservable
                 }
             }
         }

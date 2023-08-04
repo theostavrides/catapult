@@ -104,7 +104,7 @@ export class Catapult {
                 const velocityY = projectileSpeed * Math.cos(catapultRotation!.y)
 
                 this.projectile.physicsBody?.setLinearVelocity(new Vector3(velocityX, 10, velocityY))
-                
+                this.projectile.physicsBody?.setAngularVelocity(new Vector3(Math.random() * 10, Math.random() * 10, Math.random() * 10))
                 // viewer.showBody(this.projectile.physicsBody!);
                 this.projectile = null
             }
