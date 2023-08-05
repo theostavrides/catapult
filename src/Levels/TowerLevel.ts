@@ -121,15 +121,30 @@ class TowerLevel implements Level {
         this._initGround()
         this._initDebugger()
 
-        createJengaTower({ scene: this.scene, levels: 12, z: 50 })
+        createJengaTower({ scene: this.scene, levels: 12, z: 30, x: -18 })
+        createJengaTower({ scene: this.scene, levels: 8, z: 30, x: -10 })
+        createJengaTower({ scene: this.scene, levels: 10, z: 30, x: 0 })
+        createJengaTower({ scene: this.scene, levels: 12, z: 30, x: 8 })
+        createJengaTower({ scene: this.scene, levels: 10, z: 30, x: 17 })
 
-        createJengaTower({ scene: this.scene, levels: 10, z: 30, x: - 20 })
-        
-        createJengaTower({ scene: this.scene, levels: 8, z: 20, x: 20 })
+        createJengaTower({ scene: this.scene, levels: 6, z: 20, x: 23 })
+        createJengaTower({ scene: this.scene, levels: 8, z: 20, x: 15 })
+        createJengaTower({ scene: this.scene, levels: 10, z: 20, x: 5 })
+        createJengaTower({ scene: this.scene, levels: 12, z: 20, x: -2 })
+        createJengaTower({ scene: this.scene, levels: 10, z: 20, x: -24 })
 
-        createJengaTower({ scene: this.scene, levels: 10, z: 20, x: 10 })
+        createJengaTower({ scene: this.scene, levels: 4, z: 10, x: 23 })
+        createJengaTower({ scene: this.scene, levels: 8, z: 10, x: 13 })
+        createJengaTower({ scene: this.scene, levels: 3, z: 10, x: 3 })
+        createJengaTower({ scene: this.scene, levels: 10, z: 10, x: -3 })
+        createJengaTower({ scene: this.scene, levels: 6, z: 10, x: -13 })
 
-        createJengaTower({ scene: this.scene, levels: 6, z: 10, x: 0 })
+        createJengaTower({ scene: this.scene, levels: 3, z: 0, x: 19 })
+        createJengaTower({ scene: this.scene, levels: 5, z: 0, x: 11 })
+        createJengaTower({ scene: this.scene, levels: 4, z: 0, x: 4 })
+        createJengaTower({ scene: this.scene, levels: 2, z: 0, x: -10 })
+        createJengaTower({ scene: this.scene, levels: 5, z: 0, x: -18 })
+
 
         const catapult = new Catapult(this, new Vector3(0,0,-90), new Vector3(0,0,0))
 
