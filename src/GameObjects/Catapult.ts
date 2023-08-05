@@ -1,6 +1,7 @@
 import { 
     Vector3, MeshBuilder, Mesh, Space, TransformNode, 
-    AnimationGroup, setAndStartTimer, AbstractMesh, PhysicsShapeSphere, PhysicsAggregate, PhysicsShapeType, PhysicsViewer, PhysicsBody, PhysicsMotionType, Sound
+    AnimationGroup, setAndStartTimer, AbstractMesh, PhysicsShapeSphere,
+    PhysicsBody, PhysicsMotionType, Sound
  } from '@babylonjs/core'
 import { Level } from "../Levels/TowerLevel";
 

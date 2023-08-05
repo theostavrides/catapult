@@ -1,6 +1,7 @@
 
 import "@babylonjs/loaders/glTF";
 import { Scene } from "@babylonjs/core/scene";
+import "@babylonjs/procedural-textures"
 import { 
     MeshBuilder, Vector3, Color3, Color4, StandardMaterial,
     PhysicsAggregate, PhysicsShapeType, 
@@ -11,10 +12,10 @@ import {
     Mesh,
     DirectionalLight,
     HemisphericLight,
-    Sound,
+    NoiseProceduralTexture,
 } from "@babylonjs/core";
 
-// import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
+import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
 import "@babylonjs/core/Physics/physicsEngineComponent";
 
 // If you don't need the standard material you will still need to import it since the scene requires it.
@@ -25,6 +26,7 @@ import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { type Game } from "../Game";
 import { Catapult } from "../GameObjects/Catapult";
 import InputController from "../InputController";
+import BlockStructure, { createJengaTower } from "../GameObjects/BlockStructure";
 
 export interface Level {
     scene: Scene // The unique scene for the level
@@ -82,11 +84,20 @@ class TowerLevel implements Level {
 
     private _initGround(){
         const ground = MeshBuilder.CreateGround("ground", {width: 200, height: 200}, this.scene);
+        
+        
         const material = new StandardMaterial("groundMaterial", this.scene)
-        material.specularColor = new Color3(.2 , .2, .2)
-        material.diffuseColor = new Color3(.2, .2, .2)
-        material.ambientColor = new Color3(.2, .2, .2)
-        material.roughness = 0.7
+
+        const texture =  new StarfieldProceduralTexture("perlin", 256 * 2 * 2, this.scene);
+        // noise.octaves = 7
+        // noise.persistence = .74
+        // noise.animationSpeedFactor = -.35
+        material.ambientTexture = texture;
+        
+        // material.specularColor = new Color3(.2 , .2, .2)
+        // material.diffuseColor = new Color3(.2, .2, .2)
+        // material.ambientColor = new Color3(.2, .2, .2)
+        // material.roughness = 0.7
 
         ground.material = material
 
@@ -105,66 +116,20 @@ class TowerLevel implements Level {
         })
     }
 
-    private _initBlocks(){
-        const width = 1
-        const depth = 1
-        const height = 3
-
-        const numX = 1
-        const numY = 50
-        const numZ = 1
-
-        const xOffset = numX * width / 2
-        const zOffset = -50
-
-        const mass = 100
-
-        const box = MeshBuilder.CreateBox("box", { height, depth, width }, this.scene);
-        const material = new StandardMaterial("boxMat", this.scene);
-        box.registerInstancedBuffer("instanceColor", 4);
-        box.instancedBuffers.instanceColor = new Color4(0,0,0,1);
-        material.diffuseColor = Color3.Random();    
-        box.material = material
-        box.setEnabled(false)
-        
-        for (let x = 0; x < numX; x++) {
-            for (let y = 0; y < numY; y++) {
-                for (let z = 0; z < numZ; z++) {
-                    const boxInstance = box.createInstance(`box-${x}${y}${z}`)
-                    
-                    boxInstance.position = new Vector3(x * (width * 2) - xOffset, (y * height) + (height*.5), z * (depth * 2) - zOffset)
-                    
-                    new PhysicsAggregate(boxInstance, PhysicsShapeType.BOX, { mass }, this.scene);
-
-                    boxInstance.instancedBuffers.instanceColor = new Color4(Math.random(), Math.random(), Math.random(), 1)
-
-                    // boxInstance.physicsBody?.setCollisionCallbackEnabled(true)
-
-                    // boxInstance.physicsBody?.getCollisionObservable().add((eventData) => {
-                    //     if (eventData.distance > 1) {
-                    //         const soundNumber = Math.floor(Math.random() * 6 + 1)
-                    //         const catapultFiringSound = new Sound("crash", `sound/crash/${soundNumber}.wav`, this.scene, function () {
-                    //             catapultFiringSound.play();
-                    //         }, {
-                    //             playbackRate: Math.random() + 0.5,
-                    //             // offset: .3
-                    //             volume: eventData.distance / 7
-                    //         });
-                    //     }
-                    // });
-                    // boxInstance.checkCollisions = true
-
-                    // boxInstance.onCollideObservable
-                }
-            }
-        }
-    }
-
     private _init(){
         this._initLights()        
         this._initGround()
         this._initDebugger()
-        this._initBlocks()
+
+        createJengaTower({ scene: this.scene, levels: 12, z: 50 })
+
+        createJengaTower({ scene: this.scene, levels: 10, z: 30, x: - 20 })
+        
+        createJengaTower({ scene: this.scene, levels: 8, z: 20, x: 20 })
+
+        createJengaTower({ scene: this.scene, levels: 10, z: 20, x: 10 })
+
+        createJengaTower({ scene: this.scene, levels: 6, z: 10, x: 0 })
 
         const catapult = new Catapult(this, new Vector3(0,0,-90), new Vector3(0,0,0))
 
