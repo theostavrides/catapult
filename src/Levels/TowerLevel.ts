@@ -13,6 +13,7 @@ import {
     DirectionalLight,
     HemisphericLight,
     NoiseProceduralTexture,
+    Vector2,
 } from "@babylonjs/core";
 
 import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -88,16 +89,12 @@ class TowerLevel implements Level {
         
         const material = new StandardMaterial("groundMaterial", this.scene)
 
-        const texture =  new StarfieldProceduralTexture("perlin", 256 * 2 * 2, this.scene);
-        // noise.octaves = 7
-        // noise.persistence = .74
-        // noise.animationSpeedFactor = -.35
-        material.ambientTexture = texture;
+        const texture =  new WoodProceduralTexture("woodmat", 2**10, this.scene)
+        // texture.woodColor = new Color3(0.49, 0.25, 0)
+        // texture.ampScale = .9
         
-        // material.specularColor = new Color3(.2 , .2, .2)
-        // material.diffuseColor = new Color3(.2, .2, .2)
-        // material.ambientColor = new Color3(.2, .2, .2)
-        // material.roughness = 0.7
+        material.diffuseTexture = texture
+        material.ambientTexture = texture
 
         ground.material = material
 
