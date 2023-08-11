@@ -3,7 +3,7 @@ import "@babylonjs/loaders/glTF";
 import { Scene } from "@babylonjs/core/scene";
 import "@babylonjs/procedural-textures"
 import { 
-    MeshBuilder, Vector3, Color3, Color4, StandardMaterial,
+    MeshBuilder, Vector3, Color4, StandardMaterial,
     PhysicsAggregate, PhysicsShapeType, 
     FollowCamera,
     TransformNode,
@@ -12,11 +12,9 @@ import {
     Mesh,
     DirectionalLight,
     HemisphericLight,
-    NoiseProceduralTexture,
-    Vector2,
 } from "@babylonjs/core";
 
-import { FireProceduralTexture, GrassProceduralTexture, MarbleProceduralTexture, StarfieldProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
+import {  WoodProceduralTexture} from '@babylonjs/procedural-textures'
 import "@babylonjs/core/Physics/physicsEngineComponent";
 
 // If you don't need the standard material you will still need to import it since the scene requires it.
@@ -27,7 +25,8 @@ import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { type Game } from "../Game";
 import { Catapult } from "../GameObjects/Catapult";
 import InputController from "../InputController";
-import BlockStructure, { createJengaTower } from "../GameObjects/BlockStructure";
+import { createJengaTower } from "../GameObjects/BlockStructure";
+import Castle from "../GameObjects/Castle";
 
 export interface Level {
     scene: Scene // The unique scene for the level
@@ -74,11 +73,11 @@ class TowerLevel implements Level {
 
     private _initLights(){
         new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
-        // const dl = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 0), this.scene);
-        // const dl2 = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, 1), this.scene);
-        // const dl3 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, -1), this.scene);
+        const dl = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 0), this.scene);
+        const dl2 = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, 1), this.scene);
+        const dl3 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, -1), this.scene);
         const dl4 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 1), this.scene);
-        // [dl,dl2,dl3,dl4].forEach(l => l.intensity = 0.5)
+        [dl,dl2,dl3,dl4].forEach(l => l.intensity = 0.5)
 
     }
 
@@ -118,30 +117,7 @@ class TowerLevel implements Level {
         this._initGround()
         this._initDebugger()
 
-        createJengaTower({ scene: this.scene, levels: 12, z: 30, x: -18 })
-        createJengaTower({ scene: this.scene, levels: 8, z: 30, x: -10 })
-        createJengaTower({ scene: this.scene, levels: 10, z: 30, x: 0 })
-        createJengaTower({ scene: this.scene, levels: 12, z: 30, x: 8 })
-        createJengaTower({ scene: this.scene, levels: 10, z: 30, x: 17 })
-
-        createJengaTower({ scene: this.scene, levels: 6, z: 20, x: 23 })
-        createJengaTower({ scene: this.scene, levels: 8, z: 20, x: 15 })
-        createJengaTower({ scene: this.scene, levels: 10, z: 20, x: 5 })
-        createJengaTower({ scene: this.scene, levels: 12, z: 20, x: -2 })
-        createJengaTower({ scene: this.scene, levels: 10, z: 20, x: -24 })
-
-        createJengaTower({ scene: this.scene, levels: 4, z: 10, x: 23 })
-        createJengaTower({ scene: this.scene, levels: 8, z: 10, x: 13 })
-        createJengaTower({ scene: this.scene, levels: 3, z: 10, x: 3 })
-        createJengaTower({ scene: this.scene, levels: 10, z: 10, x: -3 })
-        createJengaTower({ scene: this.scene, levels: 6, z: 10, x: -13 })
-
-        createJengaTower({ scene: this.scene, levels: 3, z: 0, x: 19 })
-        createJengaTower({ scene: this.scene, levels: 5, z: 0, x: 11 })
-        createJengaTower({ scene: this.scene, levels: 4, z: 0, x: 4 })
-        createJengaTower({ scene: this.scene, levels: 2, z: 0, x: -10 })
-        createJengaTower({ scene: this.scene, levels: 5, z: 0, x: -18 })
-
+        const castle = new Castle(this.scene)
 
         const catapult = new Catapult(this, new Vector3(0,0,-90), new Vector3(0,0,0))
 

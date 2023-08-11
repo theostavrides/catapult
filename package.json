@@ -45,7 +45,8 @@
     "build": "npx webpack --config webpack.prod.js",
     "lint": "npx eslint . --ext .ts,.tsx",
     "test:visuals": "npx playwright test",
-    "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest"
+    "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "export:blendermodels": "python ./blender/scripts/blender_exporter.py"
   },
   "repository": {
     "type": "git",

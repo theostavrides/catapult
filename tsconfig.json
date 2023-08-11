@@ -14,5 +14,6 @@
         "noImplicitAny": false,
         "rootDir": "./",
         "esModuleInterop": true,
+        "resolveJsonModule": true,
 	}
 }
