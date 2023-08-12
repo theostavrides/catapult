@@ -14,6 +14,7 @@ import {
     HemisphericLight,
     PointLight,
     CreateSphere,
+    Color3,
 } from "@babylonjs/core";
 
 import {  BrickProceduralTexture, CloudProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
@@ -67,10 +68,11 @@ class TowerLevel implements Level {
     }
 
     private _initCamera(cameraTarget: Mesh){
-        const camera = new FollowCamera("FollowCam", new Vector3(0, 4, 0), this.scene, cameraTarget)
+        const camera = new FollowCamera("FollowCam", new Vector3(0, 0, 0), this.scene, cameraTarget)
+        camera.fov = .6
         camera.rotationOffset = 180
-        camera.heightOffset = 0
-        camera.radius = 13
+        camera.heightOffset = 2
+        camera.radius = 16
     }
 
     private _initLights(){
@@ -81,27 +83,31 @@ class TowerLevel implements Level {
         // const dl4 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 1), this.scene);
         // [dl,dl2,dl3,dl4].forEach(l => l.intensity = 0.5)
 
-        const plPos = new Vector3(20,30,-40)
+        const plPos = new Vector3(20,60,-40)
+
         const pl = new PointLight('pl1', plPos, this.scene)
+        pl.specular = new Color3(.6, .1, .1);
+        pl.diffuse = new Color3(.4, .1, .1);
+
         pl.position = plPos
-        const plMesh = CreateSphere('pl1_sphere')
-        plMesh.position = plPos
+        // const plMesh = CreateSphere('pl1_sphere')
+        // plMesh.position = plPos
 
     }
 
 
     private _initGround(){
-        const ground = MeshBuilder.CreateGround("ground", {width: 200, height: 200}, this.scene);
+        const ground = MeshBuilder.CreateGround("ground", {width: 80, height: 80}, this.scene);
+        ground.position.x = -5
+        ground.position.z = 15
         
         
         const material = new StandardMaterial("groundMaterial", this.scene)
 
-        const texture =  new BrickProceduralTexture("groundmat", 2**10, this.scene)
-        // texture.woodColor = new Color3(0.49, 0.25, 0)
-        // texture.ampScale = .9
-        
-        material.diffuseTexture = texture
-        material.ambientTexture = texture
+        const col = new Color3(0, 0.051, 0.004)
+        material.diffuseColor = col
+        material.specularColor = col
+        material.ambientColor = col
 
         ground.material = material
 
@@ -127,7 +133,7 @@ class TowerLevel implements Level {
 
         const castle = new Castle(this.scene)
 
-        const catapult = new Catapult(this, new Vector3(0,0,-90), new Vector3(0,0,0))
+        const catapult = new Catapult(this, new Vector3(200, 50,-200), new Vector3(0,-.5,0))
 
 
         this._initCamera(catapult.cameraTarget)

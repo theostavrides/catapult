@@ -30,7 +30,7 @@ class Castle {
             blocks.push(box)            
             
             // physicsViewer.showBody(body)
-            new PhysicsAggregate(box, PhysicsShapeType.BOX, { mass: 200 }, scene)
+            new PhysicsAggregate(box, PhysicsShapeType.BOX, { mass: dimensions.x * dimensions.y * dimensions.z * 50 }, scene)
         })
         
 

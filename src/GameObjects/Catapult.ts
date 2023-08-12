@@ -45,7 +45,7 @@ export class Catapult {
 
         // Set up follow camera
         this.cameraTarget = MeshBuilder.CreateBox("cameraTarget", {size: .25 }, this.level.scene)
-        this.cameraTarget.position = new Vector3(0, 4.75, 0);
+        this.cameraTarget.position = new Vector3(0, 4.5, 0);
         this.cameraTarget.parent = this.transformNode
         this.cameraTarget.visibility = 0
 
@@ -100,7 +100,7 @@ export class Catapult {
                 
                 const catapultRotation = this.transformNode.rotationQuaternion?.toEulerAngles() || this.transformNode.rotation
 
-                const projectileSpeed = 50
+                const projectileSpeed = 70
                 const velocityX = projectileSpeed * Math.sin(catapultRotation!.y)
                 const velocityY = projectileSpeed * Math.cos(catapultRotation!.y)
 
