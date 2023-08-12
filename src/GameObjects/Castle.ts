@@ -6,7 +6,7 @@ class Castle {
     constructor(scene: Scene){
         const { castle } = blueprints
         const blocks: Mesh[] = []
-        const physicsViewer = new PhysicsViewer(scene)
+        // const physicsViewer = new PhysicsViewer(scene)
         
         castle.forEach(block => {
             const { dimensions, location } = block
@@ -19,23 +19,15 @@ class Castle {
             
             box.position.addInPlace(new Vector3(location.x,location.y,location.z))
 
+            // Material
             const material = new StandardMaterial("boxMat", scene)
-            material.diffuseColor = new Color3(.4,.4,.5)
+
+            const v = .4 + (Math.random() * .05)
+            material.diffuseColor = new Color3(v,v,v)
+            
             box.material = material
 
             blocks.push(box)            
-            
-            // const body = new PhysicsBody(box, PhysicsMotionType.DYNAMIC, false, scene)
-            
-            // body.setMassProperties({ mass: dimensions.x * dimensions.y * dimensions.z * 100 })
-            
-            // body.shape = new PhysicsShapeBox(
-            //     new Vector3(0,0,0), 
-            //     new Quaternion(0,0,0,1), 
-            //     new Vector3(dimensions.x, dimensions.y, dimensions.z), 
-            //     scene
-            // )
-            
             
             // physicsViewer.showBody(body)
             new PhysicsAggregate(box, PhysicsShapeType.BOX, { mass: 200 }, scene)

@@ -12,9 +12,11 @@ import {
     Mesh,
     DirectionalLight,
     HemisphericLight,
+    PointLight,
+    CreateSphere,
 } from "@babylonjs/core";
 
-import {  WoodProceduralTexture} from '@babylonjs/procedural-textures'
+import {  BrickProceduralTexture, CloudProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
 import "@babylonjs/core/Physics/physicsEngineComponent";
 
 // If you don't need the standard material you will still need to import it since the scene requires it.
@@ -73,11 +75,17 @@ class TowerLevel implements Level {
 
     private _initLights(){
         new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
-        const dl = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 0), this.scene);
-        const dl2 = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, 1), this.scene);
-        const dl3 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, -1), this.scene);
-        const dl4 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 1), this.scene);
-        [dl,dl2,dl3,dl4].forEach(l => l.intensity = 0.5)
+        // const dl = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 0), this.scene);
+        // const dl2 = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, 1), this.scene);
+        // const dl3 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, -1), this.scene);
+        // const dl4 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 1), this.scene);
+        // [dl,dl2,dl3,dl4].forEach(l => l.intensity = 0.5)
+
+        const plPos = new Vector3(20,30,-40)
+        const pl = new PointLight('pl1', plPos, this.scene)
+        pl.position = plPos
+        const plMesh = CreateSphere('pl1_sphere')
+        plMesh.position = plPos
 
     }
 
@@ -88,7 +96,7 @@ class TowerLevel implements Level {
         
         const material = new StandardMaterial("groundMaterial", this.scene)
 
-        const texture =  new WoodProceduralTexture("woodmat", 2**10, this.scene)
+        const texture =  new BrickProceduralTexture("groundmat", 2**10, this.scene)
         // texture.woodColor = new Color3(0.49, 0.25, 0)
         // texture.ampScale = .9
         
