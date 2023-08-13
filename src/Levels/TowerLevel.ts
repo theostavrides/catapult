@@ -1,6 +1,6 @@
 
-import "@babylonjs/loaders/glTF";
-import { Scene } from "@babylonjs/core/scene";
+import "@babylonjs/loaders/glTF"
+import { Scene } from "@babylonjs/core/scene"
 import "@babylonjs/procedural-textures"
 import { 
     MeshBuilder, Vector3, Color4, StandardMaterial,
@@ -10,26 +10,22 @@ import {
     SceneLoader,
     AnimationGroup,
     Mesh,
-    DirectionalLight,
     HemisphericLight,
     PointLight,
-    CreateSphere,
     Color3,
-} from "@babylonjs/core";
+} from "@babylonjs/core"
 
-import {  BrickProceduralTexture, CloudProceduralTexture, WoodProceduralTexture} from '@babylonjs/procedural-textures'
-import "@babylonjs/core/Physics/physicsEngineComponent";
+import "@babylonjs/core/Physics/physicsEngineComponent"
 
 // If you don't need the standard material you will still need to import it since the scene requires it.
-import "@babylonjs/core/Materials/standardMaterial";
-import "@babylonjs/core/Materials/";
-import { havokModule } from "../externals/havok";
-import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
-import { type Game } from "../Game";
-import { Catapult } from "../GameObjects/Catapult";
-import InputController from "../InputController";
-import { createJengaTower } from "../GameObjects/BlockStructure";
-import Castle from "../GameObjects/Castle";
+import "@babylonjs/core/Materials/standardMaterial"
+import "@babylonjs/core/Materials/"
+import { havokModule } from "../externals/havok"
+import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin"
+import { type Game } from "../Game"
+import { Catapult } from "../GameObjects/Catapult"
+import InputController from "../InputController"
+import Building from "../GameObjects/Building"
 
 export interface Level {
     scene: Scene // The unique scene for the level
@@ -97,7 +93,7 @@ class TowerLevel implements Level {
 
 
     private _initGround(){
-        const ground = MeshBuilder.CreateGround("ground", {width: 80, height: 80}, this.scene);
+        const ground = MeshBuilder.CreateGround("ground", {width: 120, height: 120}, this.scene);
         ground.position.x = -5
         ground.position.z = 15
         
@@ -131,7 +127,9 @@ class TowerLevel implements Level {
         this._initGround()
         this._initDebugger()
 
-        const castle = new Castle(this.scene)
+        new Building(this.scene, 'castle')
+        new Building(this.scene, 'fort')
+        new Building(this.scene, 'fortTower')
 
         const catapult = new Catapult(this, new Vector3(200, 50,-200), new Vector3(0,-.5,0))
 

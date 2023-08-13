@@ -22,26 +22,28 @@ def parse_xyz(obj, include_w=False):
 
     return parsed
 
-def generate_castle_data():
-    castleData = []
+def generate_data(blenderObjectName):
+    data = []
 
-    # print all objects
     for obj in bpy.data.objects:
         if (hasattr(obj, "parent") and hasattr(obj.parent, "name")):
-            if (obj.parent.name == "Castle"):
+            if (obj.parent.name == blenderObjectName):
                 block = {
                     "location": parse_xyz(obj.location),
                     "dimensions": parse_xyz(obj.dimensions),
                     # "quaternion": parse_xyz(obj.rotation_euler.to_quaternion(), True)
                 }
                 
-                castleData.append(block)
+                data.append(block)
 
-    return castleData
+    return data
 
 def write_data_to_json_file():
     data = {
-        "castle": generate_castle_data()
+        "castle": generate_data("Castle"),
+        "fort": generate_data("Fort"),
+        "fortTower": generate_data("FortTower"),
+
     }
     out_file = open(json_file_path, "w")
     json.dump(data, out_file)

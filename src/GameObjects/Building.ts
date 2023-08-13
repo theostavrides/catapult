@@ -1,16 +1,18 @@
-import { Color3, Mesh, MeshBuilder, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Quaternion, Scene, StandardMaterial, TransformNode, Vector3 } from '@babylonjs/core'
+import { Color3, Mesh, MeshBuilder, PhysicsAggregate,  PhysicsShapeType, Scene, StandardMaterial, Vector3 } from '@babylonjs/core'
 import blueprints from '../../public/models/blueprints.json'
 
+export type BuildingName = 'castle'|'fort'|'fortTower'
 
-class Castle {
-    constructor(scene: Scene){
-        const { castle } = blueprints
+class Building {
+    constructor(scene: Scene, buildingName: BuildingName){
+        const structure = blueprints[buildingName]
+
         const blocks: Mesh[] = []
-        // const physicsViewer = new PhysicsViewer(scene)
         
-        castle.forEach(block => {
+        structure.forEach(block => {
             const { dimensions, location } = block
 
+            // Create box
             const box = MeshBuilder.CreateBox("box", { 
                 width: dimensions.x,
                 height: dimensions.y, 
@@ -29,12 +31,10 @@ class Castle {
 
             blocks.push(box)            
             
-            // physicsViewer.showBody(body)
+            // Physics 
             new PhysicsAggregate(box, PhysicsShapeType.BOX, { mass: dimensions.x * dimensions.y * dimensions.z * 50 }, scene)
         })
-        
-
     }
 }
 
-export default Castle
+export default Building
