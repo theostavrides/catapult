@@ -93,21 +93,24 @@ class TowerLevel implements Level {
 
 
     private _initGround(){
-        const ground = MeshBuilder.CreateGround("ground", {width: 120, height: 120}, this.scene);
+        const groundRadius = 110
+        // const ground = MeshBuilder.CreateGround("ground", {width: 140, height: 140}, this.scene);
+        const ground = MeshBuilder.CreateDisc("ground", {radius: groundRadius}, this.scene);
+        ground.rotate(new Vector3(1,0,0), Math.PI/2)
         ground.position.x = -5
         ground.position.z = 15
         
         
         const material = new StandardMaterial("groundMaterial", this.scene)
-
-        const col = new Color3(0, 0.051, 0.004)
+        const col = new Color3(0.09, 0.11, 0.12)
         material.diffuseColor = col
         material.specularColor = col
         material.ambientColor = col
-
         ground.material = material
 
-        new PhysicsAggregate(ground, PhysicsShapeType.BOX, { mass: 0 }, this.scene);
+        new PhysicsAggregate(ground, PhysicsShapeType.MESH, {radius: groundRadius, mass: 0, }, this.scene);
+
+        // ground.physi
     }
 
     private _initDebugger(){
