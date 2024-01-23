@@ -168,7 +168,7 @@ const createTowerLevel = async ({ game } : { game: Game }) => {
 
 const importAssets = async (scene: Scene) => {
     // Add models to the existing scene.
-    await SceneLoader.AppendAsync('models/','catapult.glb', scene)
+    await SceneLoader.AppendAsync('/','catapult.glb', scene)
 
     const addCleanAnimationGroupsToScene = () => {  
         // Create new animation groups in the scene  

@@ -1,5 +1,5 @@
 import { Color3, Mesh, MeshBuilder, PhysicsAggregate,  PhysicsShapeType, Scene, StandardMaterial, Vector3 } from '@babylonjs/core'
-import blueprints from '../../public/models/blueprints.json'
+import blueprints from '../../public/blueprints.json'
 
 export type BuildingName = 'castle'|'fort'|'fortTower'
 

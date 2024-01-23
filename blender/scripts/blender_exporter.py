@@ -5,7 +5,7 @@ import bpy
 import json
 
 
-json_file_path = "public/models/blueprints.json"
+json_file_path = "public/blueprints.json"
 blender_file_path = "blender/catapult_block_structures.blend"
 
 bpy.ops.wm.open_mainfile(filepath=blender_file_path)
