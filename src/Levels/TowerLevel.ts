@@ -17,6 +17,7 @@ import {
 
 import "@babylonjs/core/Physics/physicsEngineComponent"
 
+declare var __webpack_public_path__: string;
 // If you don't need the standard material you will still need to import it since the scene requires it.
 import "@babylonjs/core/Materials/standardMaterial"
 import "@babylonjs/core/Materials/"
@@ -128,9 +129,9 @@ class TowerLevel implements Level {
     private _init(){
         this._initLights()        
         this._initGround()
-        this._initDebugger()
+        // this._initDebugger()
 
-        new Building(this.scene, 'castle')
+        // new Building(this.scene, 'castle')
         new Building(this.scene, 'fort')
         new Building(this.scene, 'fortTower')
 
@@ -166,9 +167,9 @@ const createTowerLevel = async ({ game } : { game: Game }) => {
     })
 }
 
-const importAssets = async (scene: Scene) => {
+const importAssets = async (scene: Scene) => {    
     // Add models to the existing scene.
-    await SceneLoader.AppendAsync('/','catapult.glb', scene)
+    await SceneLoader.AppendAsync(__webpack_public_path__,'catapult.glb', scene)
 
     const addCleanAnimationGroupsToScene = () => {  
         // Create new animation groups in the scene  
