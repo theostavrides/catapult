@@ -176,7 +176,7 @@ export class Catapult {
         } else {
             // Wheel Rotation when moving forward or backwards
             this.transformNode.getChildMeshes(false, (n) => n.name.startsWith("Wheel")).filter(n => {
-                const rotationAmount = this._movementZ / 5
+                const rotationAmount = this._movementZ / 3.14
                 n.rotate(new Vector3(0,1,0), rotationAmount * -1)
             })
         }
