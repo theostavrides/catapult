@@ -43,6 +43,11 @@ export class Game {
             if (this.mainMenuScene && this.mainMenuOpen) {
                 this.mainMenuScene.render()
             } 
+
+            const fps = document.getElementById('fps')
+            if (fps) {
+                fps.innerHTML = this.engine.getFps().toFixed() + " fps";
+            }
         })
     }
 

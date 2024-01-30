@@ -5,6 +5,8 @@ import {
  } from '@babylonjs/core'
 import { Level } from "../Levels/TowerLevel";
 
+declare var __webpack_public_path__: string;
+
 interface IAnimations {
     fire: AnimationGroup
     reload: AnimationGroup
@@ -23,6 +25,7 @@ export class Catapult {
     private _deltaTime = 0
     private _movementZ = 0
     private _rotationY = 0
+    private _wheelRotation = 0
     private _moveDirection = new Vector3()
     private _inputAmt = 0
 
@@ -130,7 +133,7 @@ export class Catapult {
             this._isFiring = true
             this._animations.fire.play()
 
-            const catapultFiringSound = new Sound("catapultFiringSound", "sound/catapult_firing_sound.mp3", this.level.scene, function () {
+            const catapultFiringSound = new Sound("catapultFiringSound", `${__webpack_public_path__}/catapult_firing_sound.mp3`, this.level.scene, function () {
                 catapultFiringSound.play();
             }, {
                 playbackRate: 1.5,
@@ -141,12 +144,13 @@ export class Catapult {
 
     private _updateFromControls(){
         this._deltaTime = this.level.scene.getEngine().getDeltaTime() / 1000.0;
-        this._rotationY = this.level.inputController.rotation / 120 //right, x
-        this._movementZ = this.level.inputController.forward / 7 //fwd, z
+
+        this._rotationY = this.level.inputController.rotation * this._deltaTime / 5 //right, x
+        this._movementZ = this.level.inputController.forward * this._deltaTime * 5 //fwd, z
         
         // Catapult Translation
         if (this.level.inputController.forwardAxis !== 0) {
-            this.transformNode.locallyTranslate(new Vector3(0,0,this._movementZ))
+            this.transformNode.locallyTranslate(new Vector3(0, 0, this._movementZ))
         }
 
         // Catapult Rotation
@@ -159,22 +163,21 @@ export class Catapult {
         if (this.level.inputController.forwardAxis === 0) {
             if (this.level.inputController.rotationAxis !== 0) {
                 // Wheel Rotation when not moving forward or backwards but only turning
-                
-                const rotationAmount = this.level.inputController.rotationAxis * .015
+                const amt = this.level.inputController.rotationAxis * this._deltaTime
 
                 this.transformNode.getChildMeshes(false, (n) => n.name.startsWith("Wheel.")).filter(n => {
                     if (n.name === "Wheel.fr" || n.name === "Wheel.br") {
-                        n.rotate(new Vector3(0,1,0), -1 * rotationAmount)
+                        n.rotate(new Vector3(0,1,0), -1 * amt)
                     } else {
-                        n.rotate(new Vector3(0,1,0), rotationAmount)
+                        n.rotate(new Vector3(0,1,0), amt)
                     }
                 })
             }
         } else {
             // Wheel Rotation when moving forward or backwards
             this.transformNode.getChildMeshes(false, (n) => n.name.startsWith("Wheel")).filter(n => {
-                const rotationAmount = -1 * this._movementZ / 5
-                n.rotate(new Vector3(0,1,0), rotationAmount)
+                const rotationAmount = this._movementZ / 5
+                n.rotate(new Vector3(0,1,0), rotationAmount * -1)
             })
         }
 

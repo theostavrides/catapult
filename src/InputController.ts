@@ -9,6 +9,7 @@ class InputController {
     public rotationAxis = 0;
     public forwardAxis = 0;
     public shoot = false
+    public cockingArm = false
 
     constructor(scene: Scene) {
         this._scene = scene
@@ -55,6 +56,16 @@ class InputController {
             this.rotation = 0;
             this.rotationAxis = 0;
         }
+
+        // if (this.inputMap[" "]) {
+        //     this.cockingArm = true
+        // } else {
+        //     if (this.cockingArm === true) {
+        //         this.shoot = true
+        //     } else {
+        //         this.shoot = false
+        //     }
+        // }
 
         // Spacebar for shooting
         if (this.inputMap[" "]) {
