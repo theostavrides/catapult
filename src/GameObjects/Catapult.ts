@@ -84,6 +84,7 @@ export class Catapult {
         })
 
         this._animations.fire.onAnimationGroupEndObservable.add(() => {                
+            // Shoot the projectile at the end of the fire animation
             if (this.projectile){                    
                 // const viewer = new PhysicsViewer(this.level.scene)
                 
@@ -103,11 +104,16 @@ export class Catapult {
                 
                 const catapultRotation = this.transformNode.rotationQuaternion?.toEulerAngles() || this.transformNode.rotation
 
-                const projectileSpeed = 70
-                const velocityX = projectileSpeed * Math.sin(catapultRotation!.y)
-                const velocityY = projectileSpeed * Math.cos(catapultRotation!.y)
+                const projectileSpeed = 55
 
-                this.projectile.physicsBody?.setLinearVelocity(new Vector3(velocityX, 10, velocityY))
+                const pitch = Math.PI/16
+                const velocityY = projectileSpeed * Math.sin(pitch)
+                const xzMagnitude = Math.sqrt(Math.pow(projectileSpeed,2) - Math.pow(velocityY, 2))
+                const velocityX = xzMagnitude * Math.sin(catapultRotation!.y)
+                const velocityZ = xzMagnitude * Math.cos(catapultRotation!.y)
+
+
+                this.projectile.physicsBody?.setLinearVelocity(new Vector3(velocityX, velocityY, velocityZ))
                 this.projectile.physicsBody?.setAngularVelocity(new Vector3(Math.random() * 10, Math.random() * 10, Math.random() * 10))
                 // viewer.showBody(this.projectile.physicsBody!);
                 this.projectile = null
@@ -129,17 +135,15 @@ export class Catapult {
     }
 
     private async _fireCatapult(){
-        if (this._isFiring === false && this._isReloading === false) {
-            this._isFiring = true
-            this._animations.fire.play()
+        this._isFiring = true
+        this._animations.fire.play()
 
-            const catapultFiringSound = new Sound("catapultFiringSound", `${__webpack_public_path__}/catapult_firing_sound.mp3`, this.level.scene, function () {
-                catapultFiringSound.play();
-            }, {
-                playbackRate: 1.5,
-                offset: .3
-            });
-        }
+        const catapultFiringSound = new Sound("catapultFiringSound", `${__webpack_public_path__}/catapult_firing_sound.mp3`, this.level.scene, function () {
+            catapultFiringSound.play();
+        }, {
+            playbackRate: 1.5,
+            offset: .3
+        });
     }
 
     private _updateFromControls(){
@@ -181,8 +185,10 @@ export class Catapult {
             })
         }
 
+
+
         // Shoot
-        if (this.level.inputController.space) {
+        if (this.level.inputController.space && this._isFiring === false && this._isReloading === false) {
             this._fireCatapult()
         }
     }
