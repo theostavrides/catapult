@@ -15,6 +15,9 @@ import {
     Color3,
 } from "@babylonjs/core"
 
+import { AdvancedDynamicTexture, Control, Rectangle } from '@babylonjs/gui'
+
+
 import "@babylonjs/core/Physics/physicsEngineComponent"
 
 declare var __webpack_public_path__: string;
@@ -33,6 +36,7 @@ export interface Level {
     game: Game
     assets: IAssets
     inputController: InputController
+    gui?: GUI
 }
 
 interface ITowerLevelParams {
@@ -49,11 +53,16 @@ interface IAssets {
     }
 }
 
+interface GUI {
+    power: Rectangle;
+}
+
 class TowerLevel implements Level {
     scene: Scene
     game: Game
     assets: IAssets
     inputController: InputController
+    gui: GUI|undefined;
 
     constructor({ game, scene, assets, inputController } : ITowerLevelParams ){
         this.scene = scene
@@ -114,6 +123,28 @@ class TowerLevel implements Level {
         // ground.physi
     }
 
+    private _initGUI(){
+        // GUI
+        var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+        var power = new Rectangle();
+        power.width = "30px";
+        power.height = "0%";
+        power.cornerRadius = 0;
+        power.color = "green";
+        power.background = "green";
+
+        advancedTexture.addControl(power);   
+    
+        power.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        power.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+        advancedTexture.addControl(power);
+
+        this.gui = {
+            power
+        }
+    }
+
     private _initDebugger(){
         window.addEventListener("keydown", (ev) => {
             if (ev.shiftKey && ev.ctrlKey && ev.key === 'I') {
@@ -129,6 +160,7 @@ class TowerLevel implements Level {
     private _init(){
         this._initLights()        
         this._initGround()
+        this._initGUI()
         // this._initDebugger()
 
         // new Building(this.scene, 'castle')

@@ -1,8 +1,9 @@
 import { 
     Vector3, MeshBuilder, Mesh, Space, TransformNode, 
     AnimationGroup, setAndStartTimer, AbstractMesh, PhysicsShapeSphere,
-    PhysicsBody, PhysicsMotionType, Sound
- } from '@babylonjs/core'
+    PhysicsBody, PhysicsMotionType, Sound,
+} from '@babylonjs/core'
+
 import { Level } from "../Levels/TowerLevel";
 
 declare var __webpack_public_path__: string;
@@ -39,6 +40,8 @@ export class Catapult {
         rotation: Vector3 = new Vector3(0,0,0),
     ){
         this.level = level
+
+        this.level.gui!.power.height = '50%';
 
         this.transformNode = this.level.assets.catapult
         this.transformNode.position = position
