@@ -57,7 +57,7 @@ export class Catapult {
             fire: this.level.scene.animationGroups.find(ag => ag.name === "fire_clean")!,
             reload: this.level.scene.animationGroups.find(ag => ag.name === "reload_clean")!,
         }
-
+        
         // Put catapult into firing position
         this._animations.reload.play()
         this._animations.reload.goToFrame(this._animations.reload.to)
@@ -182,7 +182,7 @@ export class Catapult {
         }
 
         // Shoot
-        if (this.level.inputController.shoot) {
+        if (this.level.inputController.space) {
             this._fireCatapult()
         }
     }
