@@ -1,14 +1,10 @@
+# Use this in the blender python console
+# Run this command (change filepath as necessary): 
+# exec(compile(open(filename).read(), '/Users/theostavrides/Desktop/misc/Tzatziki_Studios/catapult/public/blueprints.json', 'exec'))
 
-# Important!!!: Run this file with "npm run export:blendermodels"
-
-import bpy
 import json
 
-
-json_file_path = "public/blueprints.json"
-blender_file_path = "blender/catapult_block_structures.blend"
-
-bpy.ops.wm.open_mainfile(filepath=blender_file_path)
+json_file_path = "/Users/theostavrides/Desktop/blueprints.json"
 
 def parse_xyz(obj, include_w=False):
     parsed = {
