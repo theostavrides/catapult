@@ -128,11 +128,11 @@ class TowerLevel implements Level {
         var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
         var power = new Rectangle();
-        power.width = "30px";
+        power.width = "20px";
         power.height = "0%";
         power.cornerRadius = 0;
-        power.color = "green";
-        power.background = "green";
+        power.color = 'rgb(0, 0, 0)';
+        power.background = 'rgb(0, 0, 0)';
 
         advancedTexture.addControl(power);   
     

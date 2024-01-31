@@ -1,10 +1,25 @@
 import { 
     Vector3, MeshBuilder, Mesh, Space, TransformNode, 
     AnimationGroup, setAndStartTimer, AbstractMesh, PhysicsShapeSphere,
-    PhysicsBody, PhysicsMotionType, Sound,
+    PhysicsBody, PhysicsMotionType, Sound, Scalar
 } from '@babylonjs/core'
 
 import { Level } from "../Levels/TowerLevel";
+
+interface Color { r: number, g: number, b: number }
+
+function getGradientValue(from: Color, to: Color, ratio: number) {
+    const r = Math.ceil(from.r * ratio + to.r * (1 - ratio));
+    const g = Math.ceil(from.g * ratio + to.g * (1 - ratio));
+    const b = Math.ceil(from.b * ratio + to.b * (1 - ratio));
+  
+    return {
+        r,
+        g,
+        b,
+        toRGBString: () => `rgb(${r},${g},${b})`
+    }
+}
 
 declare var __webpack_public_path__: string;
 
@@ -33,6 +48,11 @@ export class Catapult {
     // Action variables
     private _isFiring = false
     private _isReloading = false
+    private _gaugingPowerInput = false
+    private _projectileMaxVelocity = 80
+    private _projectileMinVelocity = 20
+    private _projectileStartVelocity = 0
+
 
     constructor(
         level: Level,
@@ -40,8 +60,6 @@ export class Catapult {
         rotation: Vector3 = new Vector3(0,0,0),
     ){
         this.level = level
-
-        this.level.gui!.power.height = '50%';
 
         this.transformNode = this.level.assets.catapult
         this.transformNode.position = position
@@ -107,7 +125,7 @@ export class Catapult {
                 
                 const catapultRotation = this.transformNode.rotationQuaternion?.toEulerAngles() || this.transformNode.rotation
 
-                const projectileSpeed = 55
+                const projectileSpeed = this._projectileStartVelocity
 
                 const pitch = Math.PI/16
                 const velocityY = projectileSpeed * Math.sin(pitch)
@@ -191,8 +209,32 @@ export class Catapult {
 
 
         // Shoot
-        if (this.level.inputController.space && this._isFiring === false && this._isReloading === false) {
-            this._fireCatapult()
+        if (this.level.gui && this._isFiring === false && this._isReloading === false) {
+            // we only care about space bar input when the catapult is not firing or reloading
+
+            if (this.level.inputController.space) {
+                this._gaugingPowerInput = true
+                let power = this.level.gui.power.height
+                const powerPct = typeof power === 'string' ? parseFloat(power) : power || 0
+                const newPct = powerPct + (100 * this._deltaTime) / 1.7
+                this.level.gui.power.height = `${newPct}%`
+
+                const from = { r: 250, g: 0, b: 0}
+                const to = { r: 0, g: 0, b: 250 }
+                const gradientValue = getGradientValue(from, to, newPct / 100)
+                this.level.gui.power.color = gradientValue.toRGBString();
+                this.level.gui.power.background = gradientValue.toRGBString();
+            } else {
+                if (this._gaugingPowerInput) {
+                    // fire catapult
+                    let power = this.level.gui.power.height
+                    const powerPct = typeof power === 'string' ? parseFloat(power) : power || 0
+                    this._projectileStartVelocity = Math.max(this._projectileMaxVelocity * powerPct / 100, this._projectileMinVelocity)
+                    this._fireCatapult()
+                    this._gaugingPowerInput = false;
+                    this.level.gui.power.height = `0%`
+                }
+            }
         }
     }
 
