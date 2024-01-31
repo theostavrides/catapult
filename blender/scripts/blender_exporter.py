@@ -4,7 +4,7 @@
 
 import json
 
-json_file_path = "/Users/theostavrides/Desktop/blueprints.json"
+json_file_path = "/Users/theostavrides/Desktop/misc/Tzatziki_Studios/catapult/public/blueprints.json"
 
 def parse_xyz(obj, include_w=False):
     parsed = {
@@ -36,10 +36,9 @@ def generate_data(blenderObjectName):
 
 def write_data_to_json_file():
     data = {
-        "castle": generate_data("Castle"),
+        "fort2": generate_data("Fort2"),
         "fort": generate_data("Fort"),
         "fortTower": generate_data("FortTower"),
-
     }
     out_file = open(json_file_path, "w")
     json.dump(data, out_file)
