@@ -83,28 +83,18 @@ class TowerLevel implements Level {
 
     private _initLights(){
         new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
-        // const dl = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 0), this.scene);
-        // const dl2 = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, 1), this.scene);
-        // const dl3 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, -1), this.scene);
-        // const dl4 = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 1), this.scene);
-        // [dl,dl2,dl3,dl4].forEach(l => l.intensity = 0.5)
 
         const plPos = new Vector3(20,60,-40)
 
         const pl = new PointLight('pl1', plPos, this.scene)
         pl.specular = new Color3(.6, .1, .1);
         pl.diffuse = new Color3(.4, .1, .1);
-
         pl.position = plPos
-        // const plMesh = CreateSphere('pl1_sphere')
-        // plMesh.position = plPos
-
     }
 
 
     private _initGround(){
         const groundRadius = 110
-        // const ground = MeshBuilder.CreateGround("ground", {width: 140, height: 140}, this.scene);
         const ground = MeshBuilder.CreateDisc("ground", {radius: groundRadius}, this.scene);
         ground.rotate(new Vector3(1,0,0), Math.PI/2)
         ground.position.x = -5
@@ -119,21 +109,48 @@ class TowerLevel implements Level {
         ground.material = material
 
         new PhysicsAggregate(ground, PhysicsShapeType.MESH, {radius: groundRadius, mass: 0, }, this.scene);
-
-        // ground.physi
     }
 
     private _initGUI(){
-        // GUI
         var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
+        // Power Bar Container
+        var powerContainer = new Rectangle();
+        powerContainer.width = "20px";
+        powerContainer.height = "100%";
+        powerContainer.cornerRadius = 0;
+        const color = 'rgb(100, 110, 100)'
+        powerContainer.color = color;
+        powerContainer.background = color;
+        powerContainer.zIndex = 1
+        advancedTexture.addControl(powerContainer);   
+    
+        powerContainer.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        powerContainer.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+        advancedTexture.addControl(powerContainer);
+
+        // Power Lines
+        for (let i = 1; i < 11; i++) {
+            const line = new Rectangle();
+            line.height = "5px";
+            line.width = "20px";
+            line.top = `${i * 10}%`
+            line.zIndex = 3
+            line.color = 'rgb(130, 140, 130)';
+            line.background = 'rgb(130, 140, 130)';
+            line.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+            line.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+            advancedTexture.addControl(line);
+        }
+
+        // Power Bar
         var power = new Rectangle();
         power.width = "20px";
         power.height = "0%";
         power.cornerRadius = 0;
         power.color = 'rgb(0, 0, 0)';
         power.background = 'rgb(0, 0, 0)';
-
+        power.zIndex = 2
         advancedTexture.addControl(power);   
     
         power.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -167,7 +184,7 @@ class TowerLevel implements Level {
         new Building(this.scene, 'fort')
         new Building(this.scene, 'fortTower')
 
-        const catapult = new Catapult(this, new Vector3(200, 50,-200), new Vector3(0,-.5,0))
+        const catapult = new Catapult(this, new Vector3(130, 15,-130), new Vector3(0,-.5,0))
 
 
         this._initCamera(catapult.cameraTarget)
