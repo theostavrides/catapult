@@ -135,7 +135,7 @@ export class Catapult {
 
 
                 this.projectile.physicsBody?.setLinearVelocity(new Vector3(velocityX, velocityY, velocityZ))
-                this.projectile.physicsBody?.setAngularVelocity(new Vector3(Math.random() * 10, Math.random() * 10, Math.random() * 10))
+                this.projectile.physicsBody?.setAngularVelocity(new Vector3(Math.random() * 5, Math.random() * 5, Math.random() * 5))
                 // viewer.showBody(this.projectile.physicsBody!);
                 this.projectile = null
             }
@@ -170,13 +170,13 @@ export class Catapult {
     private _updateFromControls(){
         this._deltaTime = this.level.scene.getEngine().getDeltaTime() / 1000.0;
 
-        this._rotationY = this.level.inputController.rotation * this._deltaTime / 5 //right, x
+        this._rotationY = this.level.inputController.rotation * this._deltaTime / 4 //right, x
         this._movementZ = this.level.inputController.forward * this._deltaTime * 5 //fwd, z
         
         // Catapult Translation
-        if (this.level.inputController.forwardAxis !== 0) {
-            this.transformNode.locallyTranslate(new Vector3(0, 0, this._movementZ))
-        }
+        // if (this.level.inputController.forwardAxis !== 0) {
+        //     this.transformNode.locallyTranslate(new Vector3(0, 0, this._movementZ))
+        // }
 
         // Catapult Rotation
         if (this.level.inputController.rotationAxis !== 0) {
