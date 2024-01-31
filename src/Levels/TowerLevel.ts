@@ -13,6 +13,8 @@ import {
     HemisphericLight,
     PointLight,
     Color3,
+    CubeTexture,
+    Texture,
 } from "@babylonjs/core"
 
 import { AdvancedDynamicTexture, Control, Rectangle } from '@babylonjs/gui'
@@ -82,23 +84,28 @@ class TowerLevel implements Level {
     }
 
     private _initLights(){
-        new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
+        const hl = new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
+        hl.intensity = 1.3
 
         const plPos = new Vector3(20,60,-40)
 
         const pl = new PointLight('pl1', plPos, this.scene)
         pl.specular = new Color3(.6, .1, .1);
-        pl.diffuse = new Color3(.4, .1, .1);
+        pl.diffuse = new Color3(.353,.145,.145);
+        pl.intensity = 1.3
         pl.position = plPos
     }
 
 
-    private _initGround(){
-        const groundRadius = 110
+    private _initEnvironment(){
+        // Ground
+        const groundRadius = 80
         const ground = MeshBuilder.CreateDisc("ground", {radius: groundRadius}, this.scene);
         ground.rotate(new Vector3(1,0,0), Math.PI/2)
+        ground.rotate(new Vector3(0,0,1), Math.PI/3)
         ground.position.x = -5
         ground.position.z = 15
+        ground.receiveShadows = true;
         
         
         const material = new StandardMaterial("groundMaterial", this.scene)
@@ -109,6 +116,24 @@ class TowerLevel implements Level {
         ground.material = material
 
         new PhysicsAggregate(ground, PhysicsShapeType.MESH, {radius: groundRadius, mass: 0, }, this.scene);
+
+
+        //Fog
+        // this.scene.fogMode = Scene.FOGMODE_EXP;
+        // this.scene.fogDensity = 0.0004;
+        // this.scene.fogColor = new Color3(0.9, 0.9, 0.85);
+
+
+        // Skybox
+        var skybox = MeshBuilder.CreateBox("skyBox", {size:1000.0}, this.scene);
+        var skyboxMaterial = new StandardMaterial("skyBox", this.scene);
+        skyboxMaterial.backFaceCulling = false;
+        skyboxMaterial.reflectionTexture = new CubeTexture("skybox/skybox", this.scene);
+        skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
+        skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
+        skyboxMaterial.specularColor = new Color3(0, 0, 0);
+        skybox.material = skyboxMaterial;		
+
     }
 
     private _initGUI(){
@@ -176,9 +201,9 @@ class TowerLevel implements Level {
 
     private _init(){
         this._initLights()        
-        this._initGround()
+        this._initEnvironment()
         this._initGUI()
-        // this._initDebugger()
+        this._initDebugger()
 
         new Building(this.scene, 'fort')
         new Building(this.scene, 'fortTower')
