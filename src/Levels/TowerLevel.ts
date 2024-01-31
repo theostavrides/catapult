@@ -164,7 +164,7 @@ class TowerLevel implements Level {
 
     private _initDebugger(){
         window.addEventListener("keydown", (ev) => {
-            if (ev.shiftKey && ev.ctrlKey && ev.key === 'I') {
+            if (ev.shiftKey && ev.key === 'I') {
                 if (this.scene.debugLayer.isVisible()) {
                     this.scene.debugLayer.hide();
                 } else {
@@ -180,11 +180,11 @@ class TowerLevel implements Level {
         this._initGUI()
         // this._initDebugger()
 
-        // new Building(this.scene, 'castle')
         new Building(this.scene, 'fort')
         new Building(this.scene, 'fortTower')
+        new Building(this.scene, 'fort2')
 
-        const catapult = new Catapult(this, new Vector3(130, 15,-130), new Vector3(0,-.5,0))
+        const catapult = new Catapult(this, new Vector3(130, 15,-130), new Vector3(0,-.75,0))
 
 
         this._initCamera(catapult.cameraTarget)

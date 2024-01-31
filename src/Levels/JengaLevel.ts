@@ -114,7 +114,7 @@ class TowerLevel implements Level {
     private _init(){
         this._initLights()        
         this._initGround()
-        this._initDebugger()
+        // this._initDebugger()
 
         createJengaTower({ scene: this.scene, levels: 12, z: 30, x: -18 })
         createJengaTower({ scene: this.scene, levels: 8, z: 30, x: -10 })
