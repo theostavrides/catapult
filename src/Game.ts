@@ -26,10 +26,12 @@ export class Game {
     private async _init(): Promise<void> {
         this.engine = (await EngineFactory.CreateAsync(this.canvas, {})) as Engine
 
-        this.mainMenuScene = createStartMenuScene(this.engine, (level: LevelEnum) => {
-            this._goToLevel(level)
-        })
+        // this.mainMenuScene = createStartMenuScene(this.engine, (level: LevelEnum) => {
+        //     this._goToLevel(level)
+        // })
         
+        this._goToLevel(LevelEnum.TOWER)
+
         window.addEventListener('resize', () => {
             this.engine.resize();
         });

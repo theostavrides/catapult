@@ -84,7 +84,7 @@ class TowerLevel implements Level {
     }
 
     private _initCamera(cameraTarget: Mesh){
-        const camera = new FollowCamera("FollowCam", new Vector3(0, 0, 0), this.scene, cameraTarget)
+        const camera = new FollowCamera("FollowCam", new Vector3(500, 0, -500), this.scene, cameraTarget)
         camera.fov = .6
         camera.rotationOffset = 180
         camera.heightOffset = 2
@@ -98,7 +98,7 @@ class TowerLevel implements Level {
         hl.intensity = 1.3
 
         
-        const plPos = new Vector3(0,40,-60)
+        const plPos = new Vector3(0,25,-60)
         const pl = new PointLight('pl1', plPos, this.scene)
         pl.specular = new Color3(.6, .1, .1);
         pl.diffuse = new Color3(.353,.145,.145);
