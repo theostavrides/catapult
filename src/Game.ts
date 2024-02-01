@@ -44,10 +44,10 @@ export class Game {
                 this.mainMenuScene.render()
             } 
 
-            const fps = document.getElementById('fps')
-            if (fps) {
-                fps.innerHTML = this.engine.getFps().toFixed() + " fps";
-            }
+            // const fps = document.getElementById('fps')
+            // if (fps) {
+            //     fps.innerHTML = this.engine.getFps().toFixed() + " fps";
+            // }
         })
     }
 

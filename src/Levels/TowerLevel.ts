@@ -98,17 +98,17 @@ class TowerLevel implements Level {
         hl.intensity = 1.3
 
         
-        const plPos = new Vector3(20,60,-60)
+        const plPos = new Vector3(0,40,-60)
         const pl = new PointLight('pl1', plPos, this.scene)
         pl.specular = new Color3(.6, .1, .1);
         pl.diffuse = new Color3(.353,.145,.145);
-        pl.intensity = 1
+        pl.intensity = 1.1
 
         const plPos2 = new Vector3(-20,60,60)
         const pl2 = new PointLight('pl1', plPos2, this.scene)
         pl2.specular = new Color3(.6, .1, .1);
         pl2.diffuse = new Color3(.353,.145,.145);
-        pl2.intensity = 1
+        pl2.intensity = 1.1
     }
 
 
@@ -349,7 +349,7 @@ class TowerLevel implements Level {
         this._initLights()        
         this._initEnvironment()
         this._initGUI()
-        this._initDebugger()
+        // this._initDebugger()
 
         new Building(this.scene, 'fort')
         new Building(this.scene, 'fortTower')
