@@ -93,15 +93,22 @@ class TowerLevel implements Level {
 
     private _initLights(){
         const hl = new HemisphericLight("hl1", new Vector3(0, 1, 0), this.scene)
+        hl.diffuse = new Color3(1,.9,.9);
+        // hl.specular = new Color3(1,.9,.9);
         hl.intensity = 1.3
 
-        const plPos = new Vector3(20,60,-40)
-
+        
+        const plPos = new Vector3(20,60,-60)
         const pl = new PointLight('pl1', plPos, this.scene)
         pl.specular = new Color3(.6, .1, .1);
         pl.diffuse = new Color3(.353,.145,.145);
         pl.intensity = 1.3
-        pl.position = plPos
+
+        // const plPos2 = new Vector3(-20,60,60)
+        // const pl2 = new PointLight('pl1', plPos2, this.scene)
+        // pl2.specular = new Color3(.6, .1, .1);
+        // pl2.diffuse = new Color3(.353,.145,.145);
+        // pl2.intensity = 1.3
     }
 
 
@@ -208,8 +215,13 @@ class TowerLevel implements Level {
                 rotation: new Vector3(-Math.PI/5,-Math.PI/1.3,Math.PI/6),
                 position: new Vector3(60,-25,160),
                 material: boulderMaterial
+            },
+            {
+                scale: { height: 50, width: 10, depth: 10},
+                rotation: new Vector3(0,Math.PI/4,-0.1),
+                position: new Vector3(128,-10,-128),
+                material: boulderMaterial
             }
-            
         ]
 
         boulderData.forEach((b, index) => {
