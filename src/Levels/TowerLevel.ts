@@ -133,8 +133,8 @@ class TowerLevel implements Level {
         const boulderData = [
             {
                 scale: { height: 10, width: 20, depth: 10},
-                position: new Vector3(55, -5, 0),
-                rotation: new Vector3(.7,0,.7),
+                position: new Vector3(55, -5.4, 0),
+                rotation: new Vector3(.7,.2,.7),
                 material: boulderMaterial
             },
             {
@@ -145,7 +145,7 @@ class TowerLevel implements Level {
             },
             {
                 scale: { height: 30, width: 30, depth: 30},
-                position: new Vector3(-60, -5, -30),
+                position: new Vector3(-60, -8, -30),
                 rotation: new Vector3(.4,.2,.7),
                 material: boulderMaterial
             },
@@ -165,6 +165,48 @@ class TowerLevel implements Level {
                 scale: { height: 25, width: 25, depth: 25},
                 rotation: new Vector3(-.5,.4,.1),
                 position: new Vector3(30, -10, 70),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 25, width: 25, depth: 25},
+                rotation: new Vector3(-.7,.3,.9),
+                position: new Vector3(35, -14, -60),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 15, width: 20, depth: 20},
+                rotation: new Vector3(2.3,Math.PI/5,.5),
+                position: new Vector3(10, -10, -80),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 15, width: 15, depth: 15},
+                rotation: new Vector3(Math.PI/4,-Math.PI/12,-Math.PI/16),
+                position: new Vector3(-20, -3, -80),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 15, width: 15, depth: 15},
+                rotation: new Vector3(Math.PI/8,Math.PI/8,Math.PI/8),
+                position: new Vector3(80,-7,-20),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 15, width: 15, depth: 15},
+                rotation: new Vector3(Math.PI/6,Math.PI/6,Math.PI/4),
+                position: new Vector3(90,-8,40),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 50, width: 50, depth: 50},
+                rotation: new Vector3(-Math.PI/5,-Math.PI/7,Math.PI/6),
+                position: new Vector3(-240,-15,160),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 50, width: 50, depth: 50},
+                rotation: new Vector3(-Math.PI/5,-Math.PI/1.3,Math.PI/6),
+                position: new Vector3(60,-25,160),
                 material: boulderMaterial
             }
             
