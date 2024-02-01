@@ -3,8 +3,13 @@ import "@babylonjs/loaders/glTF"
 import { Scene } from "@babylonjs/core/scene"
 import "@babylonjs/procedural-textures"
 import { 
-    MeshBuilder, Vector3, Color4, StandardMaterial,
-    PhysicsAggregate, PhysicsShapeType, 
+    MeshBuilder, 
+    Vector2, 
+    Vector3, 
+    Color4, 
+    StandardMaterial,
+    PhysicsAggregate, 
+    PhysicsShapeType, 
     FollowCamera,
     TransformNode,
     SceneLoader,
@@ -16,6 +21,9 @@ import {
     CubeTexture,
     Texture,
 } from "@babylonjs/core"
+
+import { WaterMaterial } from "@babylonjs/materials"
+import { GrassProceduralTexture } from "@babylonjs/procedural-textures"
 
 import { AdvancedDynamicTexture, Control, Rectangle } from '@babylonjs/gui'
 
@@ -99,14 +107,13 @@ class TowerLevel implements Level {
 
     private _initEnvironment(){
         // Ground
-        const groundRadius = 80
-        const ground = MeshBuilder.CreateDisc("ground", {radius: groundRadius}, this.scene);
+        const groundRadius = 100
+        const ground = MeshBuilder.CreateDisc("ground", {radius: groundRadius, tessellation: 7}, this.scene);
         ground.rotate(new Vector3(1,0,0), Math.PI/2)
-        ground.rotate(new Vector3(0,0,1), Math.PI/3)
-        ground.position.x = -5
-        ground.position.z = 15
-        ground.receiveShadows = true;
-        
+        ground.rotate(new Vector3(0,0,1), Math.PI/1.4)
+        ground.position.x = 5
+        ground.scaling.x = .7
+        ground.scaling.z = .7
         
         const material = new StandardMaterial("groundMaterial", this.scene)
         const col = new Color3(0.09, 0.11, 0.12)
@@ -117,15 +124,74 @@ class TowerLevel implements Level {
 
         new PhysicsAggregate(ground, PhysicsShapeType.MESH, {radius: groundRadius, mass: 0, }, this.scene);
 
+        // Boulders
+
+        const boulderMaterial = new StandardMaterial("boulderMaterial", this.scene)
+        const boulderMatCol = new Color3(.2, 0.2, 0.3)
+        boulderMaterial.diffuseColor = boulderMatCol
+
+        const boulderData = [
+            {
+                scale: { height: 10, width: 20, depth: 10},
+                position: new Vector3(55, -5, 0),
+                rotation: new Vector3(.7,0,.7),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 10, width: 10, depth: 10},
+                position: new Vector3(-10, -5, -60),
+                rotation: new Vector3(.7,0,.7),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 30, width: 30, depth: 30},
+                position: new Vector3(-60, -5, -30),
+                rotation: new Vector3(.4,.2,.7),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 60, width: 50, depth: 46},
+                position: new Vector3(-60, -25, 40),
+                rotation: new Vector3(.9,Math.PI/2,.6),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 50, width: 55, depth: 45},
+                rotation: new Vector3(12,Math.PI/1.4,.6),
+                position: new Vector3(-20, -10, 80),
+                material: boulderMaterial
+            },
+            {
+                scale: { height: 25, width: 25, depth: 25},
+                rotation: new Vector3(-.5,.4,.1),
+                position: new Vector3(30, -10, 70),
+                material: boulderMaterial
+            }
+            
+        ]
+
+        boulderData.forEach((b, index) => {
+            const m = MeshBuilder.CreateBox("boulder" + index, { ...b.scale }, this.scene);
+            m.position = b.position
+            m.rotation = b.rotation
+            m.material = b.material
+            new PhysicsAggregate(m, PhysicsShapeType.MESH, { mass: 0, }, this.scene);
+        })
+
+
 
         //Fog
-        // this.scene.fogMode = Scene.FOGMODE_EXP;
-        // this.scene.fogDensity = 0.0004;
-        // this.scene.fogColor = new Color3(0.9, 0.9, 0.85);
+        this.scene.fogMode = Scene.FOGMODE_EXP;
+        this.scene.fogDensity = 0.0004;
+        this.scene.fogColor = new Color3(0.9, 0.9, 0.85);
+        this.scene.fogStart = 2000;
+        this.scene.fogEnd = 3000.0;
 
 
         // Skybox
-        var skybox = MeshBuilder.CreateBox("skyBox", {size:1000.0}, this.scene);
+        var skybox = MeshBuilder.CreateBox("skyBox", {size:2000.0}, this.scene);
+        skybox.rotate(new Vector3(0,0,1), Math.PI/8)
+        skybox.position.y = 500
         var skyboxMaterial = new StandardMaterial("skyBox", this.scene);
         skyboxMaterial.backFaceCulling = false;
         skyboxMaterial.reflectionTexture = new CubeTexture("skybox/skybox", this.scene);
@@ -133,6 +199,25 @@ class TowerLevel implements Level {
         skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
         skyboxMaterial.specularColor = new Color3(0, 0, 0);
         skybox.material = skyboxMaterial;		
+
+        // Water
+        const waterMesh = MeshBuilder.CreateDisc("waterMesh", {radius: 400}, this.scene);
+        waterMesh.rotate(new Vector3(1,0,0), Math.PI/2)
+        waterMesh.position.y = -0.1
+        var water = new WaterMaterial("water", this.scene, new Vector2(512, 512));
+        
+        water.backFaceCulling = true;
+        water.bumpTexture = new Texture("textures/waterbump.png", this.scene);
+        water.windForce = -5;
+        water.waveHeight = .1;
+        water.bumpHeight = 1;
+        water.windDirection = new Vector2(1, 1);
+        water.waterColor = new Color3(0, 0, .2);
+        water.colorBlendFactor = 0.2;
+        water.addToRenderList(skybox);
+        waterMesh.material = water;
+
+
 
     }
 
