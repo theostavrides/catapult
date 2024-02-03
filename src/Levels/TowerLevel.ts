@@ -84,7 +84,7 @@ class TowerLevel implements Level {
     }
 
     private _initCamera(cameraTarget: Mesh){
-        const camera = new FollowCamera("FollowCam", new Vector3(500, 0, -500), this.scene, cameraTarget)
+        const camera = new FollowCamera("FollowCam", new Vector3(145, 22, -145), this.scene, cameraTarget)
         camera.fov = .6
         camera.rotationOffset = 180
         camera.heightOffset = 2
@@ -350,6 +350,35 @@ class TowerLevel implements Level {
         this._initEnvironment()
         this._initGUI()
         // this._initDebugger()
+
+        this.scene.executeWhenReady(() => {
+            // Controls (top right display)
+            const controls = document.getElementById("controls")
+            if (controls) {
+                setTimeout(() => {
+                    controls.style.display = "block"
+                }, 100)
+            }
+
+            // Start Button display
+            const startButton = document.getElementById("start-button-container")
+            
+            if (startButton) {
+                startButton.style.visibility = 'visible'
+            }
+
+            const onDocClick = () => {
+                if (startButton) {
+                    startButton.style.display = 'none'
+                    document.body.removeEventListener('click', onDocClick, true)
+                }
+            }
+
+            document.body.addEventListener('click', onDocClick, true); 
+        })
+
+
+
 
         new Building(this.scene, 'fort')
         new Building(this.scene, 'fortTower')

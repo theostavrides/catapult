@@ -15,6 +15,8 @@
         margin: 0;
         padding: 0;
         position: relative;
+        font-family: 'Courier New', Courier, monospace;
+        background-color: #000;
       }
 
       #renderCanvas {
@@ -24,18 +26,79 @@
         outline: none;
       }
 
-      #fps {
+      #controls {
+        display: none;
         position: absolute;
-        top: 5px;
-        right: 5px;
-        background: blue;
+        top: 0px;
+        right: 0px;
+        
       }
+      #controls .bg {
+        position: absolute;
+        top:0;
+        bottom:0;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        background-color: black;
+        opacity: 0.05;
+      }
+      #controls .content {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        padding: 20px;
+      }
+
+      #start-button-container {
+        visibility: hidden;
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+      }
+
+      #start-button-container .txt {
+        padding: 15px 21px;
+        /* background: #2fb592; */
+        background: #38ab5e;
+        opacity: 0.8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        border-radius: 50px;
+      } 
     </style>
   </head>
 
   <body>
     <canvas id="renderCanvas" touch-action="none"></canvas>
-    <!-- <div id="fps"></div> -->
+    <div id="controls">
+      <div class="bg"></div>
+      <div class="content">
+        <div>
+          <img src="/arrow_keys.png" style="width: 100px;"/>
+        </div>
+        <div style="margin-bottom: 4px">Rotate</div>
+        <div>
+          <img src="/spacebar.png" style="width: 150px;"/>
+        </div>
+        <div style="text-align: center;">Press and hold <br/> to shoot</div>
+      </div>
+    </div>
+
+    <div id="start-button-container">
+      <div class="txt">
+        click to play!
+      </div>
+    </div>
   </body>
 
 </html>
