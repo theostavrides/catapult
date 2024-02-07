@@ -51,6 +51,14 @@ export class Game {
             //     fps.innerHTML = this.engine.getFps().toFixed() + " fps";
             // }
         })
+
+        const ak = document.getElementById('arrow_keys') as HTMLImageElement
+        const sp = document.getElementById('spacebar') as HTMLImageElement
+        if (ak && sp) {
+            ak.src = __webpack_public_path__ + ak.src + 'arrow_keys.png'
+            sp.src = __webpack_public_path__ + sp.src + 'spacebar.png'
+        }
+  
     }
 
     private async _goToLevel(level_id: LevelEnum){        

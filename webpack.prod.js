@@ -5,6 +5,8 @@ module.exports = merge(common, {
   mode: 'production',
   devtool: 'source-map',
   output: {
-    publicPath: '/catapult/'
+    publicPath: '/catapult/',
+    filename: '[name].js',
+    chunkFilename: '[name].js?cacheBust=[chunkhash]',
   }
 }); 

@@ -163,7 +163,8 @@ export class Catapult {
             catapultFiringSound.play();
         }, {
             playbackRate: 1.5,
-            offset: .3
+            offset: .3,
+            volume: .2,
         });
     }
 
